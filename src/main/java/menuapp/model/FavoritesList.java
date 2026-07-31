@@ -11,7 +11,7 @@ import java.util.List;
 public class FavoritesList {
 
   private String name;
-  private final List<MenuItem> items = new ArrayList<>()
+  private final List<MenuItem> items = new ArrayList<>();
 
   /**
    * Creates an empty favorites list with a label.
