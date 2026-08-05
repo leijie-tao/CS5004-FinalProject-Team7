@@ -13,7 +13,6 @@ public class MockFavoritesPanelDemo {
 
   /**
    * Opens a window holding only the favorites screen.
-   *
    * @param args unused
    */
   public static void main(String[] args) {
