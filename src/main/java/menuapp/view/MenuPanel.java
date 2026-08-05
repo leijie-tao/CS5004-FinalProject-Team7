@@ -21,4 +21,23 @@ public class MenuPanel extends AppPanel {
   public void refresh() {
     throw new UnsupportedOperationException("TODO");
   }
+
+
+  // Default View that is laid out by section
+
+
+  // Category dropdown
+
+
+  // Search field and related buttons
+
+
+  // Adding items to cart button or "add to cart"
+
+
+  // Adding an item to favorite button or "add to favorites"
+
+
+
+
 }

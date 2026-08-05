@@ -79,7 +79,7 @@ public class MockController extends AppController {
     favorites.add(new MenuItem("Côte de bœuf", 31.00, Category.MAIN, null));
     favorites.add(new MenuItem("Savoureux", 7.50, Category.DESSERT, null));
     favorites.add(new MenuItem("Café au lait", 3.00, Category.BEVERAGE, null));
-    System.out.println("FakeController: loaded " + favorites.size()
+    System.out.println("MockController: loaded " + favorites.size()
         + " items from " + filePath);
   }
 
