@@ -29,9 +29,12 @@ public class Order {
    *
    * @param item the item to add
    * @param quantity how many units, must be positive
-   * @throws IllegalArgumentException when quantity is not positive
+   * @throws IllegalArgumentException when item is null or quantity is not positive
    */
   public void add(MenuItem item, int quantity) {
+    if (item == null) {
+      throw new IllegalArgumentException("Item must not be null");
+    }
     if (quantity <= 0) {
       throw new IllegalArgumentException("Quantity must be positive: " + quantity);
     }

@@ -53,6 +53,13 @@ public class OrderTest {
     assertThrows(IllegalArgumentException.class, () -> order.add(burger, -1));
   }
 
+  /** Adding a null item is rejected. */
+  @Test
+  void addNullItemThrows() {
+    Order order = new Order();
+    assertThrows(IllegalArgumentException.class, () -> order.add(null));
+  }
+
   /** setQuantity replaces the quantity of an item already in the cart. */
   @Test
   void setQuantityUpdatesExistingItem() {
