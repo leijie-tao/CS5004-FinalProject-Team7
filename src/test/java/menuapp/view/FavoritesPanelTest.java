@@ -33,7 +33,7 @@ public class FavoritesPanelTest {
     assertEquals(0, FavoritesPanel.buildRows(new ArrayList<MenuItem>()).length);
   }
 
-  /** A null list is treated the same as an empty one. */
+  /** A null list is treated like an empty one. */
   @Test
   public void buildRowsHandleNull() { assertEquals(0, FavoritesPanel.buildRows(null).length);
   }
