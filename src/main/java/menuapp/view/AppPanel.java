@@ -11,7 +11,6 @@ public abstract class AppPanel extends JPanel {
 
   /**
    * Stores the controller for the subclass to use.
-   *
    * @param controller the shared controller
    */
   protected AppPanel(AppController controller) {

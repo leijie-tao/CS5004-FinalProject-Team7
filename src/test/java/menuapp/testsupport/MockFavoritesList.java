@@ -7,10 +7,8 @@ import menuapp.model.MenuItem;
 
 /**
  * A working stand-in for {@link FavoritesList} used only while the view is
- * built ahead of the model. The real class currently throws
- * {@code UnsupportedOperationException} from every method. This subclass overrides each of
- * those methods with a plain {@code ArrayList} behind it. 
- * This class exists so {@link MockController} has something real to hand back, and it is deleted
+ * built ahead of the model. This subclass overrides each UnsupportedOperationException from real fave list
+ * methods with a plain {@code ArrayList} behind it. This class exists so {@link MockController} has something real to hand back, and it is deleted
  * once the model team finishes {@code FavoritesList}.
  */
 public class MockFavoritesList extends FavoritesList {

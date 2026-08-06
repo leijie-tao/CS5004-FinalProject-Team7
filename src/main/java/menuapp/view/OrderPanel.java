@@ -7,7 +7,6 @@ public class OrderPanel extends AppPanel {
 
   /**
    * Creates the order (cart) screen.
-   *
    * @param controller the shared controller
    */
   public OrderPanel(AppController controller) {

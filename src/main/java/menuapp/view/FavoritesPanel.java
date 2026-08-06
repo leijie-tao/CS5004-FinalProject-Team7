@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -26,49 +25,39 @@ import menuapp.model.Category;
 import menuapp.model.FavoritesList;
 import menuapp.model.MenuItem;
 
+
 /**
  * Customer screen for view, modify, save, and load a favorites list. 
  * Favorites do not feed the cart or checkout and it owns no domain state or store a copy of items
  * in a field, computes total, or modify a file directly. Buttons call the controller directly
- * and uses refresh().
+ * and uses refresh(). This is a widget state only.
  */
 public class FavoritesPanel extends AppPanel {
 
   /** Column headers for the favorites table. */
   private static final String[] COLUMN_NAMES = {"Item", "Category", "Price"};
-
   /** Index of the item-name column to identify a selected row. */
   private static final int NAME_COLUMN = 0;
-
   /** Shows the list label and how many items it holds. */
   private final JLabel headerLabel;
-
   /** Shown in place of the table when the list is empty. */
   private final JLabel emptyStateLabel;
-
   /** Default table that builds wholesale on every refresh. */
   private final DefaultTableModel tableModel;
-
   /** A read-only for the favorites table. Reminder that edits go through the controller. */
   private final JTable favoritesTable;
-
   /** Scroll container for the table while the list is empty. */
   private final JScrollPane tableScrollPane;
-
   /** Removes the currently selected item and is disabled when nothing is selected. */
   private final JButton removeButton;
-
   /** Renames the list. */
   private final JButton renameButton;
-
   /** Writes the list to a chosen file and disabled when the list is empty. */
   private final JButton saveButton;
-
   /** Reads list back from the chosen file. */
   private final JButton loadButton;
-
   /** Tracks which component currently in the center slot and starts false.*/
-  private boolean showingEmptyState;
+  private boolean showingEmptyState; // only mutable widget
 
   /**
    * Builds the favorites screen from current model state.
@@ -80,7 +69,7 @@ public class FavoritesPanel extends AppPanel {
     this.headerLabel = new JLabel();
     this.emptyStateLabel = new JLabel(
             "You have no favorites yet! Add items to see them here.", SwingConstants.CENTER);
-    this.tableModel = createReadOnlyTableModel();
+    this.tableModel = new ReadOnlyTableModel(COLUMN_NAMES);
     this.favoritesTable = new JTable(tableModel);
     this.tableScrollPane = new JScrollPane(favoritesTable);
     this.removeButton = new JButton("Remove Item");
@@ -88,19 +77,10 @@ public class FavoritesPanel extends AppPanel {
     this.saveButton = new JButton("Save Favorites");
     this.loadButton = new JButton("Load Favorites");
 
-    layOutComponents();
-    attachListeners();
-    refresh();
+    layOutComponents(); // widget must exist first
+    attachListeners(); //
+    refresh(); // note, might want to turn this into a final class
   }
-
-  /**
-   * A read-only model using the favorites table column name. 
-   * @return an empty table model whose cells can't be edited
-   */
-  private DefaultTableModel createReadOnlyTableModel() {
-    return new ReadOnlyTableModel(COLUMN_NAMES);
-  }
-    
 
   /** Arranges the header, table, and button row inside a border layout. */
   private void layOutComponents() {
@@ -124,6 +104,8 @@ public class FavoritesPanel extends AppPanel {
     add(buttonRow, BorderLayout.SOUTH);
   }
 
+
+  // Listeners
   /** Wires every control to a controller call followed by a redraw. */
   private void attachListeners() {
     favoritesTable.getSelectionModel().addListSelectionListener(
@@ -132,37 +114,43 @@ public class FavoritesPanel extends AppPanel {
               public void valueChanged(ListSelectionEvent event) {
                 updateButtonState();
               }
-            });
+            }
+            );
 
     removeButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
         handleRemoveSelected();
       }
-    });
+    }
+    );
 
     renameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
         handleRename();
       }
-    });
+    }
+    );
 
     saveButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
         handleSave();
       }
-    });
+    }
+    );
 
     loadButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
         handleLoad();
       }
-    });
+    }
+    );
   }
 
+// Table Rendering
   /**
    * Redraws the whole screen from current model. Reads fresh favorites list
    * from controller rather than caching it. Method is safe to call after any change.
@@ -187,17 +175,7 @@ public class FavoritesPanel extends AppPanel {
    * @return a row holding name, category, and formatted price
    */
   static Object[][] buildRows(List<MenuItem> items) {
-    if (items == null) {
-      return new Object[0][COLUMN_NAMES.length];
-    }
-    Object[][] rows = new Object[items.size()][COLUMN_NAMES.length];
-    for (int rowIndex = 0; rowIndex < items.size(); rowIndex++) {
-      MenuItem item = items.get(rowIndex);
-      rows[rowIndex][0] = item.getName();
-      rows[rowIndex][1] = formatCategory(item.getCategory());
-      rows[rowIndex][2] = String.format(Locale.US, "$%.2f", item.getPrice());
-    }
-    return rows;
+    return ItemTableFormat.buildRows(items);
   }
 
   /**
@@ -206,11 +184,7 @@ public class FavoritesPanel extends AppPanel {
    * @return the display text for that category
    */
   static String formatCategory(Category category) {
-    if (category == null) {
-      return "";
-    }
-    String rawName = category.name();
-    return rawName.charAt(0) + rawName.substring(1).toLowerCase(Locale.US);
+    return ItemTableFormat.formatCategory(category);
   }
 
   /**
@@ -335,32 +309,6 @@ public class FavoritesPanel extends AppPanel {
   }
 
   /**
-   * Tables model used by Favorites Panel, with cells as read-only because any changes should be 
-   * made via controller rather than directly editing the table. Starts nested class.
-   */
-  private static class ReadOnlyTableModel extends DefaultTableModel {
-
-    /**
-     * Creates empty read-only table model with given column names.
-     * @param columnNames for the table columns
-     */
-    ReadOnlyTableModel(Object[] columnNames) {
-      super(new Object[0][columnNames.length], columnNames);
-    }
-
-    /**
-     * Will notify if chosen cell can be edited. 
-     * @param row of index of the cell
-     * @param column of the index of the cell
-     * @return false because cells are read-only
-     */
-    @Override
-    public boolean isCellEditable(int row, int column) {
-      return false;
-    }
-  }
-
-  /**
   * Displays an error message when a save or load operation fails.
   * @param summary a brief description of the failed operation
   * @param failure the exception that caused the failure
@@ -368,7 +316,6 @@ public class FavoritesPanel extends AppPanel {
   private void showFailure(String summary, RuntimeException failure) {
     JOptionPane.showMessageDialog(
       this, summary + ".\n" + failure.getMessage(),
-      "Favorites",
-      JOptionPane.ERROR_MESSAGE);
+      "Favorites", JOptionPane.ERROR_MESSAGE);
     }
 }

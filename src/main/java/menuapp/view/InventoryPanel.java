@@ -10,7 +10,6 @@ public class InventoryPanel extends AppPanel {
 
   /**
    * Creates the inventory screen.
-   *
    * @param controller the shared controller
    */
   public InventoryPanel(AppController controller) {

@@ -7,7 +7,6 @@ public class RoleSelectionPanel extends AppPanel {
 
   /**
    * Creates the role selection screen.
-   *
    * @param controller the shared controller
    */
   public RoleSelectionPanel(AppController controller) {
