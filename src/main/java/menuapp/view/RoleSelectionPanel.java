@@ -15,6 +15,6 @@ public class RoleSelectionPanel extends AppPanel {
 
   @Override
   public void refresh() {
-    throw new UnsupportedOperationException("TODO");
+    ;
   }
 }
