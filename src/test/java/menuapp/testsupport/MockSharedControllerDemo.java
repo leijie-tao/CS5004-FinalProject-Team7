@@ -12,6 +12,8 @@ import menuapp.view.MenuPanel;
 /**
  * Throwaway launcher that puts both customer screens in one window behind a
  * single controller, to prove they stay in step with each other.
+ * Also helps to see any bugs without CardLayout implemented first, role switching, and shared state.
+ * Second, to implements first instance of ChangeListner before implementation of MainFrame.
  * Delete this once {@code MainFrame} exists. The tab switch listener below is
  * a stand-in for the redraw that {@code MainFrame} will owe every card it shows.
  */
@@ -47,6 +49,7 @@ public class MockSharedControllerDemo {
                 demoFrame.setLocationRelativeTo(null);
                 demoFrame.setVisible(true);
             }
-        });
+        }
+        );
     }
 }

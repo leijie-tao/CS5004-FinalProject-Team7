@@ -37,7 +37,7 @@ public class MockController extends AppController {
   }
 
   /**
-   * Catalog with items spread amongst (3) main, (3) dessert, and (3) beverage to make sure filters work.
+   * Catalog with items spread amongst (5) main, (5) dessert, and (5) beverage to make sure filters work.
    * Menu items purposely picked to test against UTF rendering.
    * Throws "Sold Out Special" with items inventory low.
    */

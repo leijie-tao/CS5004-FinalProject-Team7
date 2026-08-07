@@ -97,4 +97,18 @@ public class ItemTableFormatTest {
         assertEquals("$0.05", ItemTableFormat.formatPrice(0.05));
         assertEquals("$31.00", ItemTableFormat.formatPrice(31.0));
     }
+
+    /** Any shouted enum name comes back readable, for roles as well as categories. */
+    @Test
+    public void formatEnumNameReadsReadably() {
+        assertEquals("Beverage", ItemTableFormat.formatEnumName("BEVERAGE"));
+        assertEquals("Customer", ItemTableFormat.formatEnumName("CUSTOMER"));
+    }
+
+    /** Nothing to format renders blank rather than the text "null". */
+    @Test
+    public void formatEnumNameHandlesNullAndEmpty() {
+        assertEquals("", ItemTableFormat.formatEnumName(null));
+        assertEquals("", ItemTableFormat.formatEnumName(""));
+    }
 }

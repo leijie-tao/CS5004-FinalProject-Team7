@@ -6,7 +6,7 @@ import menuapp.model.Category;
 import menuapp.model.MenuItem;
 
 /**
- * Shared display formatting for every panel that shows {@link MenuItem} objects
+ * Shared display formatting for every panel that shows menu item objects
  * in a table. {@code FavoritesPanel} and {@code MenuPanel} render three
  * columns with food name, food type, and price. Conversion from model object to display text lives here only once
  * instead copying each individually per panel.
@@ -23,8 +23,6 @@ final class ItemTableFormat {
 
     /**
      * Returns the column headers for an item table as a fresh copy on every call.
-     * A shared {@code static final} array would let any caller overwrite an element and then change
-     * the headers of every table in the application automatically.
      * @return a new array holding the three column headers, in display order
      */
     static String[] columnNames() {
@@ -34,8 +32,7 @@ final class ItemTableFormat {
     /**
      * Converts menu items into the row data a {@code DefaultTableModel} displays.
      * @param items the items to display, may be null
-     * @return one row per item holding name, readable category, and formatted
-     * price; an empty row array when {@code items} is null or empty
+     * @return one row per item holding name, readable category, formatted price and null if empty
      */
     static Object[][] buildRows(List<MenuItem> items) {
         if (items == null) {
@@ -61,13 +58,27 @@ final class ItemTableFormat {
         if (category == null) {
             return "";
         }
-        String rawName = category.name();
+        return formatEnumName(category.name());
+    }
+
+    /**
+     * Turns any enum constant name into readable display text, so
+     * {@code BEVERAGE} reads as {@code Beverage} and {@code CUSTOMER} reads as
+     * {@code Customer}.
+     * @param rawName the enum constant name, may be null or empty
+     * @return the display text, or an empty string when there is nothing to
+     * format
+     */
+    static String formatEnumName(String rawName) {
+        if (rawName == null || rawName.isEmpty()) {
+            return "";
+        }
         return rawName.charAt(0) + rawName.substring(1).toLowerCase(Locale.US);
     }
 
     /**
      * Formats a price for display with two decimal places.
-     * {@link Locale#US} is passed explicitly so the separator is a dot on every
+     * {@link Locale#US} is passed so the separator is a dot on every
      * machine. Without it the same code prints {@code $14,50} under a European
      * default locale.
      * (TODO: Note to me, come back here later--maybe I can do an enum for setting lcoale?)
