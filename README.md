@@ -63,6 +63,5 @@ items, empty orders, threshold boundaries, and defensive copies.
 `InventoryPanelTest`
 `SalesChartPanelTest`
 
-### Deliverable - Manual Tests
-`showCard`
-`MainFrame`
+### *Deliverable - Manual Tests*
+
