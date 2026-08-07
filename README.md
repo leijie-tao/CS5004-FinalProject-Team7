@@ -27,3 +27,42 @@ category (MAIN, DESSERT, BEVERAGE) for the staff sales chart.
 Both classes are covered by JUnit 5 unit tests (38 tests), including edge cases:
 non-positive quantities, over-selling, stock reaching exactly zero, unknown
 items, empty orders, threshold boundaries, and defensive copies.
+
+
+
+### GUI Components (View - Lucille Boco)
+
+#### *View* 
+`MainFrame`
+`RoleSelectionPanel`
+`MenuPanel`
+`OrderPanel`
+`InventoryPanel`
+`SalesChartPanel`
+`FavoritesPanel`
+`ItemTableFormat`
+`ReadOnlyTableModel`
+`RoleSelectionListener`
+`TabbedRolePanel`
+
+#### *Tests for View* 
+`MockController`
+`MockFavoritesList`
+`MockFavoritesPanelDemo`
+`MockMainFrameDemo`
+`MockMenuPanelDemo`
+`MockSharedControllerDemo`
+`MockOrderPanelDemo`
+`FavoritesPanelTest`
+`ItemTableFormatTest`
+`MainFrameTest`
+`MenuPanelTest`
+`RoleSelectionPanelTest`
+`TabbedRolePanelTest`
+`OrderPanelTest`
+`InventoryPanelTest`
+`SalesChartPanelTest`
+
+### Deliverable - Manual Tests
+`showCard`
+`MainFrame`
