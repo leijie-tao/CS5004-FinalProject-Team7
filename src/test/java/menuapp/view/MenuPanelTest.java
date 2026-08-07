@@ -13,7 +13,7 @@ import menuapp.model.Category;
 import menuapp.model.MenuItem;
 import org.junit.jupiter.api.Test;
 
-/** Tests MenuPanel's methods for what the table shows and what the status line reads. */
+/** Tests MenuPanel's methods like what the table shows and what the status line reads. */
 public class MenuPanelTest {
     /**
      * Builds a menu item for use in the fixtures below.
