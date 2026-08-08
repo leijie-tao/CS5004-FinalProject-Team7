@@ -1,20 +1,65 @@
 package menuapp.view;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import menuapp.model.Role;
 import menuapp.controller.AppController;
 
 /** First screen where the user picks customer or staff. */
 public class RoleSelectionPanel extends AppPanel {
+  /** Heading over button that user reads */
+  static final String TITLE_TEXT = "Welcome! Select your role:";
+  /** Text that follows role button once chosen so that user knows what their role is */
+  private static final String BUTTON_PREFIX = "Continue as ";
+  /** Repeat role picked by the user known via RoleSelectionListener */
+  private final RoleSelectionListener selectionListener;
 
   /**
-   * Creates the role selection screen.
-   * @param controller the shared controller
+   * Builds the role screen for user to see and interact with.
+   * @param controller this is the shared controller that is held within AppPanel
+   * @param listener tells which role the user picked via detected click
    */
-  public RoleSelectionPanel(AppController controller) {
+  public RoleSelectionPanel(AppController controller, RoleSelectionListener listener) {
     super(controller);
+    if (listener == null) {
+      throw new IllegalArgumentException("Failed to pick up a role selection via click");
+    }
+    this.selectionListener = listener;
+    layOutComponents();
   }
 
+  /** Heading created over role buttons. Must be placed after RoleSelectionPanel */
+  private void layOutComponents() {
+    setLayout(new BorderLayout(0, 16));
+    setBorder(BorderFactory.createEmptyBorder(24,24,24,24)); // box
+
+    JLabel titleLabel = new JLabel(TITLE_TEXT, SwingConstants.CENTER);
+    titleLabel.setFont(titleLabel,getFont().deriveFont(Font.BOLD, 18f));
+    add(titleLabel, BorderLayout.NORTH);
+
+    add(buildRoleButtons(), BorderLayout.CENTER);
+  }
+
+  /**
+   *
+   */
+
+  /**
+   * Does nothing on purpose. Lack of model here meants there's nothing to re-read.
+   * Kept method because {@code MainFrame} redraws every card shown, including this one and it can't throw.
+   */
   @Override
   public void refresh() {
-    ;
+    // this is empty on purpose since there's no model here.
   }
 }

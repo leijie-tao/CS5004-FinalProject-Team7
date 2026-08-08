@@ -13,7 +13,7 @@ import menuapp.controller.AppController;
  */
 class TabbedRolePanel extends AppPanel {
 
-    /** The tab strip. Private, so no caller can bypass the refresh on switch. */
+    /** The tab strip set to private, so no caller can bypass the refresh on switch. */
     private final JTabbedPane screenTabs;
 
     /**
