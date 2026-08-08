@@ -25,22 +25,22 @@ public class MenuItem {
 
   /** @return the unique display name of this item */
   public String getName() {
-    return name;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the price in dollars */
   public double getPrice() {
-    return price;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the section this item is grouped under */
   public Category getCategory() {
-    return category;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the image path, or null when there is none */
   public String getImagePath() {
-    return imagePath;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /**
@@ -51,18 +51,12 @@ public class MenuItem {
    */
   @Override
   public boolean equals(Object other) {
-    if(this == other) {
-      return true;
-    }
-    if(!(other instanceof MenuItem)) {
-      return false;
-    }
-    return this.name.equals(((MenuItem)other).name);
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return a hash based on the name, consistent with equals */
   @Override
   public int hashCode() {
-    return name.hashCode();
+    throw new UnsupportedOperationException("TODO");
   }
 }

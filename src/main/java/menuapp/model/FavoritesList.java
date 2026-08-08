@@ -1,6 +1,5 @@
 package menuapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +10,6 @@ import java.util.List;
 public class FavoritesList {
 
   private String name;
-  private final List<MenuItem> items = new ArrayList<>();
 
   /**
    * Creates an empty favorites list with a label.
@@ -28,9 +26,7 @@ public class FavoritesList {
    * @param item the item to add
    */
   public void add(MenuItem item) {
-    if(!contains(item.getName())) {
-      items.add(item);
-    }
+    throw new UnsupportedOperationException("TODO");
   }
 
   /**
@@ -39,9 +35,7 @@ public class FavoritesList {
    * @param items the items to add
    */
   public void addAll(List<MenuItem> items) {
-    for(MenuItem item : items) {
-      add(item);
-    }
+    throw new UnsupportedOperationException("TODO");
   }
 
   /**
@@ -51,7 +45,7 @@ public class FavoritesList {
    * @return true when the item was present
    */
   public boolean remove(String name) {
-    return items.removeIf(item -> item.getName().equals(name));
+    throw new UnsupportedOperationException("TODO");
   }
 
   /**
@@ -61,27 +55,22 @@ public class FavoritesList {
    * @return true when the item is present
    */
   public boolean contains(String name) {
-    for(MenuItem item : items) {
-      if(item.getName().contains(name)) {
-        return true;
-      }
-    }
-    return false;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the items in the list */
   public List<MenuItem> getItems() {
-    return new ArrayList<>(items);
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the number of items */
   public int size() {
-    return items.size();
+    throw new UnsupportedOperationException("TODO");
   }
 
   /** @return the label of this list */
   public String getName() {
-    return name;
+    throw new UnsupportedOperationException("TODO");
   }
 
   /**
@@ -90,6 +79,6 @@ public class FavoritesList {
    * @param name the new label
    */
   public void setName(String name) {
-    this.name = name;
+    throw new UnsupportedOperationException("TODO");
   }
 }
