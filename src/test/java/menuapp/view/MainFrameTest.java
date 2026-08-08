@@ -13,4 +13,15 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests helpers found in the MainFrame.
  */
-public class MainFrameTest { }
+public class MainFrameTest {
+
+    /** Not a test--purpose is to collect card keu for every role */
+    private Set<String> roleCardNames() {
+        Set<String> names = new HashSet<String>();
+        for (Role role : Role.values()) {
+            names.add(MainFrame.cardNameFor(role));
+        }
+        return names;
+    }
+
+}
