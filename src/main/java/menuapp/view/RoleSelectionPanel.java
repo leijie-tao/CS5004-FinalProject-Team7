@@ -44,15 +44,55 @@ public class RoleSelectionPanel extends AppPanel {
     setBorder(BorderFactory.createEmptyBorder(24,24,24,24)); // box
 
     JLabel titleLabel = new JLabel(TITLE_TEXT, SwingConstants.CENTER);
-    titleLabel.setFont(titleLabel,getFont().deriveFont(Font.BOLD, 18f));
+    titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 18f));
     add(titleLabel, BorderLayout.NORTH);
 
     add(buildRoleButtons(), BorderLayout.CENTER);
   }
 
   /**
-   *
+   * Builds a button for each role as it goes through values in Roles in order to build a collection of buttons.
+   * @return row holding every button role
    */
+  private JPanel buildRoleButtons() {
+    JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0 ));
+    for (Role role : Role.values()) {
+      buttonRow.add(buildRoleButton(role));
+    }
+    return buttonRow;
+  }
+
+  /**
+   * Builds one button per role, with the role arriving as a parameter rather than reading it as a variable. Passing
+   * role as a value allows listener to capture a value that can't be changed.
+   *
+   * @param role
+   * @return
+   */
+  private JButton buildRoleButton(final Role role){
+    JButton roleButton = new JButton(buttonTextFor(role));
+    roleButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        selectionListener.roleSelected(role);
+      }
+    }
+    );
+    return roleButton;
+  }
+
+  /**
+   * Builds a label for each button role so that user knows which role they currently are. Formatting is done through
+   * ItemTableFormat {@code formatEnumName(String)} so that the same role information informs both role/category panel.
+   * @param role assigned to the label
+   * @return button text or empty string if no role
+   */
+  static String buttonTextFor(Role role) {
+    if (role == null) {
+      return "";
+    }
+    return BUTTON_PREFIX + ItemTableFormat.formatEnumName(role.name());
+  }
 
   /**
    * Does nothing on purpose. Lack of model here meants there's nothing to re-read.
