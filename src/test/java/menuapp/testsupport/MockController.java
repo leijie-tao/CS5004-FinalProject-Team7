@@ -4,6 +4,7 @@ import menuapp.controller.AppController;
 import menuapp.model.Category;
 import menuapp.model.FavoritesList;
 import menuapp.model.MenuItem;
+import menuapp.model.Order;
 
 import java.util.*;
 
@@ -27,6 +28,21 @@ MockController extends AppController {
   private final List<MenuItem> cartAdds = new ArrayList<MenuItem>();
   /** Items handed to addToFavorites(MenuItem) to be added organized in call order */
   private final List<MenuItem> favoriteAdds = new ArrayList<MenuItem>();
+  /** The cart this fake owns. {@code AppController} builds one too, but keeps it
+   * in a private field behind a {@code getCart} that still throws. */
+  private final Order cart = new Order();
+  /** Stock per item name, so checkout can refuse a line the way */
+  private final Map<String, Integer> stock = new HashMap<String, Integer>();
+  /** Stock every item */
+  private static final int DEFAULT_STOCK = 20;
+  /** Checkout refusal is reachable by pressing plus a few times rather than by editing this file. */
+  private static final String SCARCE_ITEM = "Durian Ice Cream";
+  /** Two units of {@link #SCARCE_ITEM} exist and any more than than two would not work. */
+  private static final int SCARCE_STOCK = 2;
+  /** How many times checkout has completed. */
+  private int checkoutCount;
+  /** The cart total at the last completed checkout. */
+  private double lastCheckoutTotal;
 
 
   /** Creates a fake controller holding a small seeded favorites list. */
@@ -62,6 +78,14 @@ MockController extends AppController {
     menuItems.add(new MenuItem("Alžírská káva", 4.56, Category.BEVERAGE, null));
     menuItems.add(new MenuItem("Cà Phê Sữa Đá", 3.75, Category.BEVERAGE, null));
     menuItems.add(new MenuItem("Yuenyeung", 4,Category.BEVERAGE, null));
+  }
+
+  /** Gives every catalog item a stock level, then knocks one down so the checkout refusal has something to refuse. */
+  private void mockSeedStock() {
+    for (MenuItem item : menuItems) {
+      stock.put(item.getName(), DEFAULT_STOCK);
+    }
+    stock.put(SCARCE_ITEM, SCARCE_STOCK);
   }
 
   /** Fills the list with realistic sample items.*/
@@ -139,10 +163,14 @@ MockController extends AppController {
    */
   @Override
   public void addToCart(MenuItem item) {
-    if (item != null && UNAVAILABLE_ITEM.equals(item.getName())) {
+    if (item == null) {
+      return;
+    }
+    if (UNAVAILABLE_ITEM.equals(item.getName())) {
       throw new RuntimeException("Mock refusal: " + item.getName() + " is unavailable");
     }
     cartAdds.add(item);
+    cart.add(item);
     System.out.println("MockController: added " + item.getName() + " to the cart");
   }
 
@@ -219,5 +247,85 @@ MockController extends AppController {
   /** Return the number of items within the seeded catalog */
   public int getMenuSize() {
     return menuItems.size();
+  }
+
+  /**
+   * Hands back the live cart, not a copy, matching what the real controller
+   * will do. The panel only reads from it.
+   * @return the cart this fake owns
+   */
+  @Override
+  public Order getCart() {
+    return cart;
+  }
+
+  /**
+   * Removes a line from the cart. An unknown name is ignored rather than
+   * throwing, which is what {@code Order.remove} already does.
+   * @param name the name of the item to remove
+   */
+  @Override
+  public void removeFromCart(String name) {
+    boolean removed = cart.remove(name);
+    System.out.println("MockController: remove " + name + " returned " + removed);
+  }
+
+  /**
+   * Sets the quantity of a line. A non-positive quantity or an unknown name throws exactly as the real
+   * controller will. The panel's decrease guard is what keeps that unreachable.
+   * @param name the name of the item
+   * @param quantity the new quantity
+   */
+  @Override
+  public void setCartQuantity(String name, int quantity) {
+    cart.setQuantity(name, quantity);
+    System.out.println("MockController: set " + name + " to " + quantity);
+  }
+
+  /**
+   * Confirms the cart. Every line is checked against stock first, so a refusal
+   * leaves stock and cart untouched rather than half applied. Only once every
+   * line is known to be satisfiable does anything change.
+   * @throws RuntimeException when a line asks for more than the stock holds
+   */
+  @Override
+  public void checkout() {
+    Map<MenuItem, Integer> lines = cart.getItemsWithQuantities();
+    for (Map.Entry<MenuItem, Integer> line : lines.entrySet()) {
+      String name = line.getKey().getName();
+      int available = stock.containsKey(name) ? stock.get(name) : 0;
+      if (line.getValue() > available) {
+        throw new RuntimeException(
+                "Mock refusal: only " + available + " of " + name + " left in stock");
+      }
+    }
+    for (Map.Entry<MenuItem, Integer> line : lines.entrySet()) {
+      String name = line.getKey().getName();
+      stock.put(name, stock.get(name) - line.getValue());
+    }
+    lastCheckoutTotal = cart.getTotal();
+    checkoutCount++;
+    cart.clear();
+    System.out.println("MockController: checkout " + checkoutCount
+            + " for " + lastCheckoutTotal);
+  }
+
+  /** @return how many checkouts have completed */
+  public int getCheckoutCount() {
+    return checkoutCount;
+  }
+
+  /** @return the cart total at the last completed checkout */
+  public double getLastCheckoutTotal() {
+    return lastCheckoutTotal;
+  }
+
+  /**
+   * Reads a stock level, for the demo and for tests.
+   * @param itemName the item to look up
+   * @return the units in stock, or zero when unknown
+   */
+  public int getStock(String itemName) {
+    return stock.containsKey(itemName) ? stock.get(itemName) : 0;
   }
 }

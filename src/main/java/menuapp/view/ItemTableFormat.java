@@ -6,10 +6,9 @@ import menuapp.model.Category;
 import menuapp.model.MenuItem;
 
 /**
- * Shared display formatting for every panel that shows menu item objects
- * in a table. {@code FavoritesPanel} and {@code MenuPanel} render three
- * columns with food name, food type, and price. Conversion from model object to display text lives here only once
- * instead copying each individually per panel.
+ * Shared display formatting for every panel that shows menu item objects in a table. {@code FavoritesPanel}
+ * and {@code MenuPanel} render three columns with food name, food type, and price.
+ * Conversion from model object to display text lives here only once instead copying each individually per panel.
  */
 final class ItemTableFormat {
     /** Column headers shared by every item table. */
@@ -49,8 +48,7 @@ final class ItemTableFormat {
     }
 
     /**
-     * Turns an enum constant into readable text, so {@code BEVERAGE} reads as
-     * {@code Beverage}.
+     * Turns an enum constant into readable text, so {@code BEVERAGE} reads as {@code Beverage}.
      * @param category the category to format, may be null
      * @return the display text for that category, or an empty string when null
      */
@@ -62,9 +60,8 @@ final class ItemTableFormat {
     }
 
     /**
-     * Turns any enum constant name into readable display text, so
-     * {@code BEVERAGE} reads as {@code Beverage} and {@code CUSTOMER} reads as
-     * {@code Customer}.
+     * Turns any enum constant name into readable display text, so {@code BEVERAGE} reads as {@code Beverage}
+     * and {@code CUSTOMER} reads as {@code Customer}.
      * @param rawName the enum constant name, may be null or empty
      * @return the display text, or an empty string when there is nothing to
      * format
@@ -78,9 +75,8 @@ final class ItemTableFormat {
 
     /**
      * Formats a price for display with two decimal places.
-     * {@link Locale#US} is passed so the separator is a dot on every
-     * machine. Without it the same code prints {@code $14,50} under a European
-     * default locale.
+     * {@link Locale#US} is passed so the separator is a dot on every machine.
+     * Without it the same code prints {@code $14,50} under a European default locale.
      * (TODO: Note to me, come back here later--maybe I can do an enum for setting lcoale?)
      * @param price the price in dollars
      * @return the price as text, for example {@code $14.50}

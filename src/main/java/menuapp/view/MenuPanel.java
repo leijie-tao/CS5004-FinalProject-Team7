@@ -209,9 +209,8 @@ public class MenuPanel extends AppPanel {
   /**
    * Flattens the grouped menu into one list for the default sectioned view.
    * Iterates {@link Category#values()} rather than the map's own entries so the
-   * sections always appear in enum declaration order. Otherwise, a  {@code HashMap} would
-   * give an order that could change between runs. A category missing
-   * from the map simply contributes nothing.
+   * sections always appear in enum declaration order. Otherwise, a  {@code HashMap} would give an order
+   * that could change between runs. A category missing from the map simply contributes nothing.
    * @param grouped the menu grouped by category, may be null
    * @return a new list of every item, ordered by category then by the order each category's list holds;
    * empty when {@code grouped} is null
