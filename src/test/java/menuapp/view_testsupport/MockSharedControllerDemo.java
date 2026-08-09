@@ -1,4 +1,4 @@
-package menuapp.testsupport;
+package menuapp.view_testsupport;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;

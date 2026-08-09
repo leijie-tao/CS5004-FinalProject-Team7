@@ -1,4 +1,4 @@
-package menuapp.testsupport;
+package menuapp.view_testsupport;
 
 import java.util.ArrayList;
 import java.util.List;

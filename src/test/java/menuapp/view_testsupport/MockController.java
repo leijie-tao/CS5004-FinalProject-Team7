@@ -1,4 +1,4 @@
-package menuapp.testsupport;
+package menuapp.view_testsupport;
 
 import menuapp.controller.AppController;
 import menuapp.model.Category;
