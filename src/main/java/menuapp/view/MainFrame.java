@@ -58,6 +58,12 @@ public class MainFrame extends JFrame {
     showCard(ROLE_CARD);
   }
 
+  /**
+   * Builds the main panel card, staff card, and the customer card with each role holding a tab screen.
+   * Customers have three screens: menu, cart, and faves
+   * Staff have two screens, inventory and sales
+   * @param controller
+   */
   private void registerCards(AppController controller) {
     addCardToLayout(ROLE_CARD, new RoleSelectionPanel(controller, new RoleSelectionListener() {
       @Override
@@ -80,11 +86,17 @@ public class MainFrame extends JFrame {
     addCardToLayout(cardNameFor(Role.STAFF), staffScreens);
   }
 
+  /**
+   * Adds a card to both layout and the look up map so that the card is visible.
+   * @param cardName name card is registered under
+   * @param screen the screen to register
+   */
   private void addCardToLayout(String cardName, AppPanel screen) {
     cardHolder.add(screen, cardName);
     cards.put(cardName, screen);
   }
 
+  /** Card is centered with navigation strip at the bottom */
   private void layOutComponents() {
     JPanel navigationStrip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
     navigationStrip.setBorder(BorderFactory.createEmptyBorder(4, 8, 4,8));
@@ -95,6 +107,7 @@ public class MainFrame extends JFrame {
     add(navigationStrip, BorderLayout.SOUTH);
   }
 
+  /** Wires to listener */
   private void attachListeners() {
     switchRoleButton.addActionListener(new ActionListener() {
       @Override
@@ -105,6 +118,11 @@ public class MainFrame extends JFrame {
     );
   }
 
+  /**
+   * Shows a card, then redraws it, and then updates the navigation strip. Unknown name shows and redraws nothing
+   * instead of throwing.
+   * @param cardName name of the card to show
+   */
   private void showCard(String cardName) {
     AppPanel screen = cards.get(cardName);
     if (screen == null) {
@@ -115,6 +133,11 @@ public class MainFrame extends JFrame {
     screen.refresh();
   }
 
+  /**
+   * Returns to the role screen chosen with the names originating from the {@code Role} enum.
+   * @param role user would like to return to
+   * @return card name
+   */
   static String cardNameFor(Role role) {
     if (role == null) {
       return ROLE_CARD;
