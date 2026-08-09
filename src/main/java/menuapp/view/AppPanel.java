@@ -52,6 +52,11 @@ protected AppPanel(AppController controller, String screenTitle) {
     repaint();
   }
 
+  /**
+   * Reports failed controller call to the user, with the controller in every persistence failure at run time.
+   * @param summary description of what failed
+   * @param failure exception that caused the failure
+   */
   protected final void showFailure(String summary, RuntimeException failure) {
     JOptionPane.showMessageDialog(
             this, summary + ".\n" + failure.getMessage(), screenTitle, JOptionPane.ERROR_MESSAGE

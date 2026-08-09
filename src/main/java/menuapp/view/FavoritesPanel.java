@@ -308,14 +308,14 @@ public class FavoritesPanel extends AppPanel {
     controller.getFavorites().setName(newName);
   }
 
-  /**
-  * Displays an error message when a save or load operation fails.
-  * @param summary a brief description of the failed operation
-  * @param failure the exception that caused the failure
-  */
-  private void showFailure(String summary, RuntimeException failure) {
-    JOptionPane.showMessageDialog(
-      this, summary + ".\n" + failure.getMessage(),
-      "Favorites", JOptionPane.ERROR_MESSAGE);
-    }
+//  /**
+//  * Displays an error message when a save or load operation fails.
+//  * @param summary a brief description of the failed operation
+//  * @param failure the exception that caused the failure
+//  */
+//  private void showFailure(String summary, RuntimeException failure) {
+//    JOptionPane.showMessageDialog(
+//      this, summary + ".\n" + failure.getMessage(),
+//      "Favorites", JOptionPane.ERROR_MESSAGE);
+//    }
 }
