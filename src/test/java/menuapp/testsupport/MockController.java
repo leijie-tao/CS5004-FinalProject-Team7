@@ -14,7 +14,8 @@ import java.util.*;
  * pass the real {@code AppController} into the constructor instead of this one.
  * V2: Added
  */
-public class MockController extends AppController {
+public class
+MockController extends AppController {
 
   /** The list this fake hands back, pre-loaded so the table is never empty. */
   private MockFavoritesList favorites;

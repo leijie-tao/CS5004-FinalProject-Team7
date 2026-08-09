@@ -82,8 +82,8 @@ public class MenuPanel extends AppPanel {
     this.tableScrollPane = new JScrollPane(menuTable);
     this.emptyStateLabel = new JLabel ("No match, please try another world.", SwingConstants.CENTER);
     this.statusLabel = new JLabel();
-    this.addToCartButton = new JButton("\uD83D\uDED2 Add to cart"); // TODO: research if this shows up fine for macs?
-    this.addToFavoritesButton = new JButton("\u2665 Add to favorites"); // TODO: research if this shows up fine for macs?
+    this.addToCartButton = new JButton("+ Add to cart"); // TODO: research if this shows up fine for macs?
+    this.addToFavoritesButton = new JButton("+ Add to favorites"); // TODO: research if this shows up fine for macs?
     this.displayedItems = new ArrayList<MenuItem>();
 
     // Dependency chain methods that read instance fields directly
@@ -145,6 +145,7 @@ public class MenuPanel extends AppPanel {
     searchButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
+
         refresh();
       }
     }
