@@ -59,8 +59,8 @@ the GUI is the MainFrame(JFrame) where only one card is visible at a time.
 This component includes the panels that essentially are what the user sees regardless of the
 chosen role.
 
-`MainFrame` - Extends JFrame since the MainFrame, in actuality, is a window and not a screen. In addition, MainFrame's superclass
-can only be JFrame since Swing requires a defined presence of one as well as JFrame being the root of all the panel's containment tree. 
+`MainFrame` - Extends JFrame since the MainFrame, in actuality, is a window and not a screen since JFrame acts as the root of all the panel's containment tree.  In addition, MainFrame's superclass
+can only be JFrame since it is the application's main window and requiring JFrame as the top-level container for application's Swing components. 
 By extending JFrame, MainFrame is able to place various panels within it.  
 
 The MainFrame is responsible for the title bar, expected behaviors redraw/refresh and other closing behaviors, as well as the creation of the 
