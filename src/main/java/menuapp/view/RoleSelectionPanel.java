@@ -18,9 +18,9 @@ import menuapp.controller.AppController;
 /** First screen where the user picks customer or staff. */
 public class RoleSelectionPanel extends AppPanel {
   /** Heading over button that user reads */
-  static final String TITLE_TEXT = "Welcome! Select your role:";
+  static final String TITLE_TEXT = "Welcome!Select your role:";
   /** Text that follows role button once chosen so that user knows what their role is */
-  private static final String BUTTON_PREFIX = "Continue as ";
+  private static final String BUTTON_PREFIX = "I'm a ";
   /** Repeat role picked by the user known via RoleSelectionListener */
   private final RoleSelectionListener selectionListener;
 
@@ -65,7 +65,6 @@ public class RoleSelectionPanel extends AppPanel {
   /**
    * Builds one button per role, with the role arriving as a parameter rather than reading it as a variable. Passing
    * role as a value allows listener to capture a value that can't be changed.
-   *
    * @param role
    * @return
    */

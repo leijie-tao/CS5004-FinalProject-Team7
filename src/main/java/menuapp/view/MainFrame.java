@@ -6,6 +6,8 @@ import menuapp.controller.AppController;
 import menuapp.model.Role;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,22 +51,74 @@ public class MainFrame extends JFrame {
     this.switchRoleButton = new JButton("Switch role");
 
     // NOTE: DO NOT CHANGE ORDER! Dependency chain
-    registeredCards(controller);
+    registerCards(controller);
     layOutComponents();
-    attachListerners();
+    attachListeners();
 
     showCard(ROLE_CARD);
   }
 
   private void registerCards(AppController controller) {
-    registerCards(ROLE_CARD, new RoleSelectionPanel(controller, new RoleSelectionListener() {
+    addCardToLayout(ROLE_CARD, new RoleSelectionPanel(controller, new RoleSelectionListener() {
       @Override
       public void roleSelected(Role role) {
         showCard(cardNameFor(role));
       }
     }
+    ));
+    //CUSTOMER PANELS
+    TabbedRolePanel customerScreens = new TabbedRolePanel(controller);
+    customerScreens.addScreen("\u2615 Menu", new MenuPanel(controller));
+    customerScreens.addScreen("\uD83D\uDED2 Cart", new OrderPanel(controller));
+    customerScreens.addScreen("\u2665 Favorites", new FavoritesPanel(controller));
+    addCardToLayout(cardNameFor(Role.CUSTOMER), customerScreens);
 
+    //STAFF PANEL
+    TabbedRolePanel staffScreens = new TabbedRolePanel(controller);
+    staffScreens.addScreen("\u270F Inventory", new InventoryPanel(controller));
+    staffScreens.addScreen("\uD83D\uDCC8 Sales", new SalesChartPanel(controller));
+    addCardToLayout(cardNameFor(Role.STAFF), staffScreens);
+  }
+
+  private void addCardToLayout(String cardName, AppPanel screen) {
+    cardHolder.add(screen, cardName);
+    cards.put(cardName, screen);
+  }
+
+  private void layOutComponents() {
+    JPanel navigationStrip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+    navigationStrip.setBorder(BorderFactory.createEmptyBorder(4, 8, 4,8));
+    navigationStrip.add(switchRoleButton);
+
+    setLayout(new BorderLayout());
+    add(cardHolder, BorderLayout.CENTER);
+    add(navigationStrip, BorderLayout.SOUTH);
+  }
+
+  private void attachListeners() {
+    switchRoleButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        showCard(ROLE_CARD);
+      }
+    }
     );
   }
 
+  private void showCard(String cardName) {
+    AppPanel screen = cards.get(cardName);
+    if (screen == null) {
+      return;
+    }
+    cardLayout.show(cardHolder, cardName);
+    switchRoleButton.setVisible(!ROLE_CARD.equals(cardName)); // this collapses the strip
+    screen.refresh();
+  }
+
+  static String cardNameFor(Role role) {
+    if (role == null) {
+      return ROLE_CARD;
+    }
+    return role.name();
+  }
 }
