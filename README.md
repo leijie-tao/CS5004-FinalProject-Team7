@@ -30,20 +30,76 @@ items, empty orders, threshold boundaries, and defensive copies.
 
 
 
-### GUI Components (View - Lucille Boco)
+### GUI Components (View - L Boco)
+```mermaid
+flowchart TB
+    subgraph frame["MainFrame (JFrame)"]
+        role["Role selection<br/>two buttons"]
 
-#### *View* 
-`MainFrame`
-`RoleSelectionPanel`
-`MenuPanel`
-`OrderPanel`
-`InventoryPanel`
-`SalesChartPanel`
-`FavoritesPanel`
-`ItemTableFormat`
-`ReadOnlyTableModel`
-`RoleSelectionListener`
+        subgraph cust["Customer tabs (TabbedRolePanel)"]
+            menu["Menu panel"]
+            order["Order panel"]
+            fav["Favorites panel"]
+        end
+
+        subgraph staff["Staff tabs (TabbedRolePanel)"]
+            inv["Inventory panel"]
+            sales["Sales chart panel"]
+        end
+
+        switch["Switch role button"]
+    end
+
+    controller["AppController<br/>Called by every panel"] --> frame
+```
+The GUI (or View) is compromised of three parts, each with their own specific classes. The overarching component of
+the GUI is the MainFrame(JFrame) where only one card is visible at a time.
+
+#### *View: Windows & Navigation* 
+This component includes the panels that essentially are what the user sees regardless of the
+chosen role.
+
+`MainFrame` - Extends JFrame since the MainFrame, in actuality, is a window and not a screen. In addition, MainFrame's superclass
+can only be JFrame since Swing requires a defined presence of one as well as JFrame being the root of all the panel's containment tree. 
+By extending JFrame, MainFrame is able to place various panels within it.  
+
+The MainFrame is responsible for the title bar, expected behaviors redraw/refresh and other closing behaviors, as well as the creation of the 
+visual's size. Navigation delegation rests onn the MainFrame as it decides which cards to show (or showing) since the only
+switch button lives in this class. 
+
 `TabbedRolePanel`
+
+`RoleSelectionPanel`
+
+`RoleSelectionListener`
+
+#### *View: Content Screens*
+Consist mostly of classes that builds the widgets to create various pieces of the GUI.
+
+`MenuPanel`
+
+`OrderPanel`
+
+`FavoritesPanel`
+
+`InventoryPanel`
+
+`SalesChartPanel`
+
+#### *View: Shared Structure*
+The "Shared Structure" could have been part of the contents, but I decided to create it  their own since this third part
+works as the model to display text converter.
+
+`ItemTableFormat`
+
+`ReadOnlyTableModel`
+
+
+
+
+
+
+
 
 #### *Tests for View* 
 `MockController`
@@ -63,5 +119,4 @@ items, empty orders, threshold boundaries, and defensive copies.
 `InventoryPanelTest`
 `SalesChartPanelTest`
 
-### *Deliverable - Manual Tests*
 
