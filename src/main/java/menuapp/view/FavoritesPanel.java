@@ -308,7 +308,8 @@ public class FavoritesPanel extends AppPanel {
     controller.getFavorites().setName(newName);
   }
 
-//  /**
+
+//  /** KEEPING BELOW AS REFERENCE. Delete in the main project
 //  * Displays an error message when a save or load operation fails.
 //  * @param summary a brief description of the failed operation
 //  * @param failure the exception that caused the failure
