@@ -67,7 +67,8 @@ The MainFrame is responsible for the title bar, expected behaviors redraw/refres
 visual's size. Navigation delegation rests onn the MainFrame as it decides which cards to show (or showing) since the only
 switch button lives in this class. 
 
-`TabbedRolePanel`
+`TabbedRolePanel` - Extends `AppPanel` and has a `JTabbedPane` (composition) that has other variations of AppPanel. Essentially, the containment tree for 
+tabbed panel would have Customer Panel and Staff Panel contained within. Refresh only redraws the current visible tab while keeping the other tabs as hidden. 
 
 `RoleSelectionPanel`
 
