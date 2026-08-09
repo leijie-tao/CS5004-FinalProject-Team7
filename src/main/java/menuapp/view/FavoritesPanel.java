@@ -64,7 +64,7 @@ public class FavoritesPanel extends AppPanel {
    * @param controller the shared controller
    */
   public FavoritesPanel(AppController controller) {
-    super(controller);
+    super(controller, "Favorites");
 
     this.headerLabel = new JLabel();
     this.emptyStateLabel = new JLabel(
@@ -164,7 +164,7 @@ public class FavoritesPanel extends AppPanel {
     tableModel.setDataVector(buildRows(items), COLUMN_NAMES);
     headerLabel.setText(buildHeaderText(currentFavorites.getName(), itemCount));
 
-    showEmptyState(itemCount == 0);
+    showEmptyState(itemCount == 0, tableScrollPane, emptyStateLabel);
     updateButtonState();
   }
 

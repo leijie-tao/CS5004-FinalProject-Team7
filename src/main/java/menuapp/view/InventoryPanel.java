@@ -19,7 +19,7 @@ public class InventoryPanel extends AppPanel {
    * @param controller the shared controller
    */
   public InventoryPanel(AppController controller) {
-    super(controller);
+    super(controller); // TODO: Might need to come revise after AppPanel's recent revision
     setLayout(new BorderLayout());
     add(new JLabel(PLACEHOLDER_TEXT, SwingConstants.CENTER), BorderLayout.CENTER);
   }

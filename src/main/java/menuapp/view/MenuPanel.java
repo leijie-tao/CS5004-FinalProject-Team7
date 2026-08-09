@@ -55,8 +55,6 @@ public class MenuPanel extends AppPanel {
   private final JButton addToCartButton;
   /** Adds an item to faves */
   private final JButton addToFavoritesButton;
-  /** Tracks component layout is centered and starts false so that table is centered on run. */
-  private boolean showingEmptyState;
   /** Message panel if there are no items matching the filters */
   private final JLabel emptyStateLabel;
   /** This renders the exact list that the actual table renders with index-aligned with rows. However, rows carries only
@@ -71,7 +69,7 @@ public class MenuPanel extends AppPanel {
    * @param controller the shared controller
    */
   public MenuPanel(AppController controller) {
-    super(controller);
+    super(controller, "Menu");
 
     this.categoryCombo = new JComboBox<String>(buildCategoryLabels());
     this.searchField = new JTextField(16);
@@ -145,7 +143,6 @@ public class MenuPanel extends AppPanel {
     searchButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
-
         refresh();
       }
     }
@@ -203,7 +200,7 @@ public class MenuPanel extends AppPanel {
     tableModel.setDataVector(ItemTableFormat.buildRows(items), COLUMN_NAMES);
     statusLabel.setText(buildStatusText(items.size(), keyword, category));
 
-    showEmptyState(items.isEmpty());
+    showEmptyState(items.isEmpty(), tableScrollPane, emptyStateLabel);
     updateButtonState();
   }
 
@@ -368,24 +365,6 @@ public class MenuPanel extends AppPanel {
     refresh();
   }
 
-  /**
-   * Swaps the table for a prompt when filters find no match.
-   * Early return is required since without it a repeat call would add the same component to the center slot twice.
-   * Because the state is known to be flipping, the component being removed is always the one
-   * currently in that slot.
-   * @param isEmpty true when no items are showing
-   */
-  private void showEmptyState(boolean isEmpty) {
-    if (isEmpty == showingEmptyState) {
-      return;
-    }
-    remove(isEmpty ? tableScrollPane : emptyStateLabel);
-    add(isEmpty ? emptyStateLabel : tableScrollPane, BorderLayout.CENTER);
-    showingEmptyState = isEmpty;
-    revalidate();
-    repaint();
-  }
-
   /** Enables the two action buttons only while a row is selected. */
   private void updateButtonState() {
     boolean hasSelection = menuTable.getSelectedRow() >= 0;
@@ -451,17 +430,5 @@ public class MenuPanel extends AppPanel {
       items = flattenGrouped(controller.getGroupedMenu());
     }
     return (items == null) ? new ArrayList<MenuItem>() : items;
-  }
-
-  /**
-   * Reports a failed controller call to the user. The controller wraps every
-   * persistence failure in a {@code RuntimeException} and stating the cause.
-   * @param summary a brief description of what failed
-   * @param failure the exception that caused it
-   */
-  private void showFailure(String summary, RuntimeException failure) {
-  JOptionPane.showMessageDialog(
-          this, summary + ".\n" + failure.getMessage(),
-          "Menu", JOptionPane.ERROR_MESSAGE);
   }
 }
