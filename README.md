@@ -1,7 +1,7 @@
 # Final Project for CS 5004 - (APPLICATION NAME/Update)
 
 (remove this and add your sections/elements)
-This readme should contain the following information: 
+This readme should contain the following information:
 
 * The group member's names and github accounts
 * The application name and a brief description of the application
@@ -64,30 +64,30 @@ flowchart TB
 ```
 The GUI (or View) is compromised of three parts, each with their own specific classes. The overarching component of
 the GUI is the MainFrame(JFrame) where only one card is visible at a time. There is technical 4th part, AppPanel, since
-it doesn't belong in any of the three as it acts more as a screen contract. 
+it doesn't belong in any of the three as it acts more as a screen contract.
 
-### View: AppPanel 
-`AppPanel` is an abstract that extends `Jpanel`. Every screen in the application is an `AppPanel`, including the 
-tabbed container. It holds the `AppController` reference each screen needs and declares the abstract `refresh()`. 
+### View: AppPanel
+`AppPanel` is an abstract that extends `Jpanel`. Every screen in the application is an `AppPanel`, including the
+tabbed container. It holds the `AppController` reference each screen needs and declares the abstract `refresh()`.
 It also supplies the shared `showEmptyState` and `showFailure` helpers so no subclass reimplements
 them.
 
-Additionally, `AppPanel` is not a screen and is never instantiated. It appears here rather than under any of the 
-three groups below because both *Windows & Navigation* and *Content Screens* are built on it, and `MainFrame` 
+Additionally, `AppPanel` is not a screen and is never instantiated. It appears here rather than under any of the
+three groups below because both *Windows & Navigation* and *Content Screens* are built on it, and `MainFrame`
 switches screens through an `AppPanel` reference so the correct `refresh()` runs by dynamic dispatch.
 
-#### *View: Windows & Navigation* 
+#### *View: Windows & Navigation*
 This component includes the panels that essentially are what the user sees regardless of the
 chosen role.
 
 `MainFrame` - Extends JFrame since the MainFrame, in actuality, is a window and not a screen since JFrame acts as the root of all the panel's containment tree.  In addition, MainFrame's superclass
-can only be JFrame since it is the application's main window and requiring JFrame as the top-level container for application's Swing components. 
-By extending JFrame, MainFrame is able to place various panels within it. The MainFrame is responsible for the title bar, expected behaviors redraw/refresh and other closing behaviors, as well as the creation of the 
+can only be JFrame since it is the application's main window and requiring JFrame as the top-level container for application's Swing components.
+By extending JFrame, MainFrame is able to place various panels within it. The MainFrame is responsible for the title bar, expected behaviors redraw/refresh and other closing behaviors, as well as the creation of the
 visual's size. Navigation delegation rests onn the MainFrame as it decides which cards to show (or showing) since the only
-switch button lives in this class. 
+switch button lives in this class.
 
-`TabbedRolePanel` - Extends `AppPanel` and has a `JTabbedPane` (composition) that has other variations of AppPanel. Essentially, the containment tree for 
-tabbed panel would have Customer Panel and Staff Panel contained within. Refresh only redraws the current visible tab while keeping the other tabs as hidden. 
+`TabbedRolePanel` - Extends `AppPanel` and has a `JTabbedPane` (composition) that has other variations of AppPanel. Essentially, the containment tree for
+tabbed panel would have Customer Panel and Staff Panel contained within. Refresh only redraws the current visible tab while keeping the other tabs as hidden.
 
 `RoleSelectionPanel` - Extends `AppPanel` since this is a screen and not a window, and it is the first card
 `MainFrame` shows on startup. The panel builds its heading and then walks `Role.values()` to build one button per
@@ -190,5 +190,4 @@ being available.
 `RoleSelectionPanelTest`
 `SalesChartPanelTest`
 `TabbedRolePanelTest`
-
 
