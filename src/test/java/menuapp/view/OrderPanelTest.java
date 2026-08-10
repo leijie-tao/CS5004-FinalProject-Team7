@@ -206,5 +206,4 @@ public class OrderPanelTest {
     public void clampSelectionKeepsAnAbsentSelectionAbsent() {
         assertEquals(-1, OrderPanel.clampSelection(-1, 4));
     }
-
 }

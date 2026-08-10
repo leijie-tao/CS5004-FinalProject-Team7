@@ -84,4 +84,24 @@ final class ItemTableFormat {
     static String formatPrice(double price) {
         return String.format(Locale.US, "$%.2f", price);
     }
+
+    /**
+     * Decides which row should stay selected after the table is rebuilt. It keeps the previous row selected
+     * when possible, uses the new last row if that row no longer exists, and selects nothing when the table
+     * is empty or no row was selected before.
+     * @param previousRow the row selected before the rebuild, or -1 when nothing was selected
+     * @param rowCount how many rows the table contains after the rebuild
+     * @return the row to select, or -1 when nothing should be selected
+     */
+    static int clampSelection(int previousRow, int rowCount) {
+        if (rowCount <= 0 || previousRow < 0) {
+            return -1;
+        }
+        if (previousRow >= rowCount) {
+            return rowCount - 1;
+        }
+        return previousRow;
+    }
+
+
 }
