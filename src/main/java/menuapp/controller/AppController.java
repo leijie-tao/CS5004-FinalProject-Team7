@@ -2,6 +2,7 @@ package menuapp.controller;
 
 import java.util.List;
 import java.util.Map;
+
 import menuapp.model.Category;
 import menuapp.model.FavoritesList;
 import menuapp.model.Inventory;
@@ -40,7 +41,7 @@ public class AppController {
 
   /** @return every item grouped by category, for the menu view */
   public Map<Category, List<MenuItem>> getGroupedMenu() {
-    throw new UnsupportedOperationException("TODO");
+    return menu.groupByCategory();
   }
 
   /**
@@ -50,7 +51,7 @@ public class AppController {
    * @return the matching items
    */
   public List<MenuItem> search(String keyword) {
-    throw new UnsupportedOperationException("TODO");
+    return menu.search(keyword);
   }
 
   /**
@@ -83,7 +84,7 @@ public class AppController {
 
   /** @return the current cart */
   public Order getCart() {
-    throw new UnsupportedOperationException("TODO");
+    return cart;
   }
 
   /**
@@ -111,12 +112,12 @@ public class AppController {
    * @return the items in that category
    */
   public List<MenuItem> filterByCategory(Category category) {
-    throw new UnsupportedOperationException("TODO");
+    return menu.itemsInCategory(category);
   }
 
   /** @return the current favorites list */
   public FavoritesList getFavorites() {
-    throw new UnsupportedOperationException("TODO");
+    return favorites;
   }
 
   /**
@@ -149,7 +150,7 @@ public class AppController {
 
   /** @return the inventory, for the staff view */
   public Inventory getInventory() {
-    throw new UnsupportedOperationException("TODO");
+    return inventory;
   }
 
   /**
@@ -160,7 +161,7 @@ public class AppController {
    * @return the names of low stock items
    */
   public List<String> getLowStockItems(int threshold) {
-    throw new UnsupportedOperationException("TODO");
+    return inventory.lowStockItems(threshold);
   }
 
   /**
@@ -180,6 +181,6 @@ public class AppController {
    * @return a map from category to its accumulated revenue
    */
   public Map<Category, Double> getRevenueByCategory() {
-    throw new UnsupportedOperationException("TODO");
+    return inventory.getRevenueByCategory();
   }
 }
