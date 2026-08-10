@@ -5,6 +5,8 @@ import java.util.List;
 import menuapp.model.FavoritesList;
 import menuapp.model.MenuItem;
 
+//  NOTE: overrides contains() with .equals because the real FavoritesList.contains uses getName().contains(name)
+//  and not equality. Since add() guards on contains(), adding "Tea" to a list already holding "Green Tea" is dropped.
 /**
  * A working stand-in for {@link FavoritesList} used only while the view is
  * built ahead of the model. This subclass overrides each UnsupportedOperationException from real fave list

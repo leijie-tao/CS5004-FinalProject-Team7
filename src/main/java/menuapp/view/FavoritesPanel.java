@@ -296,10 +296,9 @@ public class FavoritesPanel extends AppPanel {
 
     /**
      * Removes one item from the favorites list.
-     * TODO: replace the body with {@code controller.removeFromFavorites(itemName)}
-     * once that method is added to {@link AppController}. Reaching through
-     * {@code getFavorites()} to mutate the model is a temporary shortcut.
-     * @param itemName the name of the item to remove
+     * TODO: replace the body with {@code controller.removeFromFavorites(itemName)} once that method is added.
+     * Reaching through getFavorites() to mutate the model breaks the View's one rule and only works because
+     * MockController hands back the live list. NOTE FOR POTENTIAL BLOCK during integration.
      */
     private void removeFavorite(String itemName) {
         controller.getFavorites().remove(itemName);

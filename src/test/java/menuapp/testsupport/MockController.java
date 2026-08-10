@@ -367,9 +367,8 @@ MockController extends AppController {
     }
 
     /**
-     * Pretends to write the low stock list. A path containing "bad" throws, the
-     * same convention {@link #saveFavorites} uses, so the panel's error dialog is
-     * reachable without touching the file system.
+     * Pretends to write the low stock list. A path containing "bad" throws, the same convention
+     * {@link #saveFavorites} uses, so the panel's error dialog is reachable without touching the file system.
      * @param threshold the low stock threshold
      * @param filePath  where it would be written
      */
