@@ -62,10 +62,10 @@ MockController extends AppController {
         menuItems.add(new MenuItem("Pečená kachna", 31.00, Category.MAIN, null));
         menuItems.add(new MenuItem("Bún Thịt Nướng", 30.135, Category.MAIN, null));
         menuItems.add(new MenuItem("Cumin Lamb Biang-Biang Noodles", 25.5,
-                Category.MAIN, "src/main/resources/images/Cumin Lamb Biang-Biang Noodles"));
+                Category.MAIN, "/images/cumin-lamb-biang-biang-noodles.png"));
         // Dessert
-        menuItems.add(new MenuItem("Savoureux", 7.00,
-                Category.DESSERT, "src/main/resources/images/savoureux.png"));
+        menuItems.add(new MenuItem("Profiteroles", 7.00,
+                Category.DESSERT,"/images/profiteroles.png"));
         menuItems.add(new MenuItem("Piñonates", 5.5, Category.DESSERT, null));
         menuItems.add(new MenuItem("Štrúdl", 6.601, Category.DESSERT, null));
         menuItems.add(new MenuItem("Chè Bắp", 4.5, Category.DESSERT, null));
@@ -74,7 +74,7 @@ MockController extends AppController {
         menuItems.add(new MenuItem("Café au lait", 3.50, Category.BEVERAGE, null));
         menuItems.add(new MenuItem("Cortado con canela", 3.00, Category.BEVERAGE, null));
         menuItems.add(new MenuItem("Alžírská káva", 4.56,
-                Category.BEVERAGE, "src/main/resources/images/Alžírská káva.png"));
+                Category.BEVERAGE, "/images/alzirska-kava.png"));
         menuItems.add(new MenuItem("Cà Phê Sữa Đá", 3.75, Category.BEVERAGE, null));
         menuItems.add(new MenuItem("Yuenyeung", 4, Category.BEVERAGE, null));
     }
@@ -221,7 +221,7 @@ MockController extends AppController {
         this.lastFilePath = filePath;
         this.favorites = new MockFavoritesList("Weekend Picks");
         favorites.add(new MenuItem("Côte de bœuf", 31.00, Category.MAIN, null));
-        favorites.add(new MenuItem("Savoureux", 7.50, Category.DESSERT, null));
+        favorites.add(new MenuItem("Profiteroles", 7.50, Category.DESSERT, null));
         favorites.add(new MenuItem("Café au lait", 3.00, Category.BEVERAGE, null));
         System.out.println("MockController: loaded " + favorites.size()
                 + " items from " + filePath);

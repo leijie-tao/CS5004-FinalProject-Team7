@@ -125,7 +125,7 @@ final class ItemTableFormat {
         }
         URL location = ItemTableFormat.class.getResource(imagePath.trim());
         if (location == null) {
-            System.out.println("loadPreview: not on classpath -> " + imagePath.trim()); // TODO: Debugging images
+            //System.out.println("loadPreview: not on classpath -> " + imagePath.trim()); // debugging purpose
             return null;
         }
         ImageIcon original = new ImageIcon(location);

@@ -527,7 +527,7 @@ public class InventoryPanel extends AppPanel {
      * @return the error message to show the user
      */
     static String buildInvalidNumberMessage(String fieldLabel, String rawText, int minimum) {
-        String rule = fieldLabel + " must be a whole number (e.g., 1, 2, 3) of at least " + minimum + ".";
+        String rule = fieldLabel + " must be a whole number of at least " + minimum + ".";
         // check that doubles are okay
         if (rawText == null || rawText.trim().isEmpty()) {
             return rule;
