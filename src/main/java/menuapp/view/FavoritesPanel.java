@@ -157,7 +157,15 @@ public class FavoritesPanel extends AppPanel {
    */
   @Override
   public void refresh() {
-    FavoritesList currentFavorites = controller.getFavorites();
+    FavoritesList currentFavorites;
+
+    // guard block
+    try {
+      currentFavorites = controller.getFavorites();
+    } catch (UnsupportedOperationException notBuiltYet) {
+      showNotReady(tableScrollPane, "getFavorites");
+      return;
+    }
     List<MenuItem> items = currentFavorites.getItems();
     int itemCount = (items == null) ? 0 : items.size();
 

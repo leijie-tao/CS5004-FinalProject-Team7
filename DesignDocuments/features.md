@@ -11,12 +11,12 @@ Course, CS 5004, Northeastern University, Summer 2026.
 
 A and B share the model. Fill in each GitHub handle before submission.
 
-| Member | GitHub | Module |
-|--------|--------|--------|
-| Si Tu | TBD | Model, shared |
+| Member | GitHub  | Module |
+|--------|---------|--------|
+| Si Tu | TBD     | Model, shared |
 | Yixuan Liu | YIXUAN-LIU-lab | Model, shared |
-| Jessie | TBD | Persistence |
-| Boco | TBD | View |
+| Jessie | TBD     | Persistence |
+| Boco | LuBocNU | View |
 | Leijie Tao | leijie-tao | Controller, Integration |
 
 ## Architecture

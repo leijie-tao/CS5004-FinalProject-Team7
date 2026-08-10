@@ -12,7 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -194,7 +193,13 @@ public class MenuPanel extends AppPanel {
     String keyword = searchField.getText();
     Category category = categoryFromLabel(selectedCategoryLabel());
 
-    List<MenuItem> items = resolveItems(keyword, category);
+    // guard block
+    List<MenuItem> items;
+    try { items = resolveItems(keyword, category);
+    } catch (UnsupportedOperationException notBuiltYet) {
+      showNotReady(tableScrollPane, "getGroupedMenu");
+      return;
+    }
     displayedItems = items;
 
     tableModel.setDataVector(ItemTableFormat.buildRows(items), COLUMN_NAMES);

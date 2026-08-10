@@ -95,13 +95,6 @@ works as the model to display text converter.
 
 `ReadOnlyTableModel`
 
-
-
-
-
-
-
-
 #### *Tests for View* 
 `MockController`
 `MockFavoritesList`
