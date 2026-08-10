@@ -29,7 +29,7 @@ public class SalesChartPanelTest {
         return revenue;
     }
 
-    // Reading one category
+    // Reading one category only
     /** A category that has earned reports what it earned. */
     @Test
     public void revenueForFindsTheCategory() {
