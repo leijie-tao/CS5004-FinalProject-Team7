@@ -53,7 +53,12 @@ flowchart TB
     controller["AppController<br/>Called by every panel"] --> frame
 ```
 The GUI (or View) is compromised of three parts, each with their own specific classes. The overarching component of
-the GUI is the MainFrame(JFrame) where only one card is visible at a time.
+the GUI is the MainFrame(JFrame) where only one card is visible at a time. There is technical 4th part, AppPanel, since
+it doesn't belong in any of the three as it acts more as a screen contract. 
+
+### View: AppPanel 
+`AppPanel`
+
 
 #### *View: Windows & Navigation* 
 This component includes the panels that essentially are what the user sees regardless of the

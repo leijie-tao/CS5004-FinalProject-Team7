@@ -1,10 +1,7 @@
 package menuapp.testsupport;
 
 import menuapp.controller.AppController;
-import menuapp.model.Category;
-import menuapp.model.FavoritesList;
-import menuapp.model.MenuItem;
-import menuapp.model.Order;
+import menuapp.model.*;
 
 import java.util.*;
 
@@ -43,6 +40,10 @@ MockController extends AppController {
   private int checkoutCount;
   /** The cart total at the last completed checkout. */
   private double lastCheckoutTotal;
+  /** Name written at the last export for tests/demo */
+  private List<String> lastExportedLowStock = new ArrayList<String>();
+  /** Stock the staff screen reads. Seeded from the same values as the cart's map. */
+  private final Inventory inventory = new Inventory();
 
 
   /** Creates a fake controller holding a small seeded favorites list. */
@@ -50,6 +51,7 @@ MockController extends AppController {
     super(null, null, null);
     this.favorites = new MockFavoritesList("My Favorites");
     mockSeedMenu();
+    mockSeedStock();
     seedStartingItems();
   }
 
@@ -84,8 +86,10 @@ MockController extends AppController {
   private void mockSeedStock() {
     for (MenuItem item : menuItems) {
       stock.put(item.getName(), DEFAULT_STOCK);
+      inventory.setStock(item.getName(), DEFAULT_STOCK);
     }
     stock.put(SCARCE_ITEM, SCARCE_STOCK);
+    inventory.setStock(SCARCE_ITEM, SCARCE_STOCK);
   }
 
   /** Fills the list with realistic sample items.*/
@@ -291,18 +295,21 @@ MockController extends AppController {
   @Override
   public void checkout() {
     Map<MenuItem, Integer> lines = cart.getItemsWithQuantities();
+
     for (Map.Entry<MenuItem, Integer> line : lines.entrySet()) {
       String name = line.getKey().getName();
-      int available = stock.containsKey(name) ? stock.get(name) : 0;
+      int available = getStock(name);
       if (line.getValue() > available) {
         throw new RuntimeException(
                 "Mock refusal: only " + available + " of " + name + " left in stock");
       }
     }
+
     for (Map.Entry<MenuItem, Integer> line : lines.entrySet()) {
       String name = line.getKey().getName();
-      stock.put(name, stock.get(name) - line.getValue());
+      stock.put(name, getStock(name) - line.getValue());
     }
+
     lastCheckoutTotal = cart.getTotal();
     checkoutCount++;
     cart.clear();
@@ -326,6 +333,62 @@ MockController extends AppController {
    * @return the units in stock, or zero when unknown
    */
   public int getStock(String itemName) {
-    return stock.containsKey(itemName) ? stock.get(itemName) : 0;
+    if (stock.containsKey(itemName)) {
+      return stock.get(itemName);
+    }
+    return 0;
+  }
+
+  /**
+   * Returns the inventory used by this mock controller. The original inventory is returned directly sdo changes
+   * made to it affect the mock's inventory.
+   * @return the inventory this fake owns, live rather than a copy */
+  @Override
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+  /**
+   * Adds the given number of units to an inventory item. Invalid amounts are handled the same as the controller.
+   * @param itemName the item to restock
+   * @param amount how many units to add
+   */
+  @Override
+  public void restock(String itemName, int amount) {
+    inventory.increase(itemName, amount);
+    System.out.println("MockController: restocked " + itemName + " by " + amount);
+  }
+
+  /**
+   * Names at or below the threshold, in name order.
+   * @param threshold the level to compare against
+   * @return the low stock names, never null
+   */
+  @Override
+  public List<String> getLowStockItems(int threshold) {
+    return inventory.lowStockItems(threshold);
+  }
+
+  /** @return copy of the names written at the last export */
+  public List<String> getLastExportedLowStock() {
+    return new ArrayList<String>(lastExportedLowStock);
+  }
+
+  /**
+   * Pretends to write the low stock list. A path containing "bad" throws, the
+   * same convention {@link #saveFavorites} uses, so the panel's error dialog is
+   * reachable without touching the file system.
+   * @param threshold the low stock threshold
+   * @param filePath where it would be written
+   */
+  @Override
+  public void exportLowStock(int threshold, String filePath) {
+    if (filePath != null && filePath.contains("bad")) {
+      throw new RuntimeException("Mock write failure for " + filePath);
+    }
+    this.lastFilePath = filePath;
+    this.lastExportedLowStock = inventory.lowStockItems(threshold);
+    System.out.println("MockController: exported " + lastExportedLowStock.size()
+            + " low stock items to " + filePath);
   }
 }
