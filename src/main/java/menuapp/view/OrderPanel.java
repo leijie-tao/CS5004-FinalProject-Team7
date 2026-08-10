@@ -57,7 +57,7 @@ public class OrderPanel extends AppPanel {
 
         this.headerLabel = new JLabel();
         this.emptyStateLabel = new JLabel(
-                "Your cart is empty.\u263A\uFE0F Add something from our menu for checkout!",
+                "Your cart is empty. Add something from our menu for checkout!\u263A\uFE0F",
                 SwingConstants.CENTER);
         this.tableModel = new ReadOnlyTableModel(cartColumnNames());
         this.cartTable = new JTable(tableModel);
@@ -177,7 +177,6 @@ public class OrderPanel extends AppPanel {
     /**
      * Reads the item name out of the selected row. A row holds only display text,
      * and every cart call is keyed by name, so no model object is needed.
-     *
      * @return the selected item name, or null when nothing is selected
      */
     private String getSelectedItemName() {
@@ -348,7 +347,6 @@ public class OrderPanel extends AppPanel {
     /**
      * Builds the header line above the table. It counts distinct lines rather than
      * total units, so one item is read instead of three (if there are three present).
-     *
      * @param lineCount how many distinct items the cart holds
      * @return the header text
      */

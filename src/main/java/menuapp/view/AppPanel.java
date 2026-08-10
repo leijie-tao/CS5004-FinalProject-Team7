@@ -31,7 +31,6 @@ public abstract class AppPanel extends JPanel {
 
     /**
      * Stores the controller for a screen that never raises an error dialog.
-     *
      * @param controller shared controller
      */
     protected AppPanel(AppController controller) {
@@ -40,7 +39,6 @@ public abstract class AppPanel extends JPanel {
 
     /**
      * Stores the controller and the title this screen's dialogs carry.
-     *
      * @param controller  shared controller
      * @param screenTitle title shown on this screen's dialogs
      */
@@ -56,7 +54,6 @@ public abstract class AppPanel extends JPanel {
      * Installs the component this panel starts out showing. Every subclass calls this from its own
      * layout method instead of adding to {@code BorderLayout.CENTER} directly, so the base class knows
      * what it is later being asked to swap out.
-     *
      * @param view the component the panel starts out showing
      */
     protected final void setCenter(Component view) {
@@ -66,7 +63,6 @@ public abstract class AppPanel extends JPanel {
     /**
      * Chooses between the normal view and the empty state view. Both are handed in so that neither the
      * caller nor this class has to remember which one is currently installed.
-     *
      * @param isEmpty   true when the empty state should be shown
      * @param fullView  normal view to show when content is available
      * @param emptyView view to show when there is no content
@@ -111,7 +107,6 @@ public abstract class AppPanel extends JPanel {
      * Shows a message when a controller method is not available yet, naming the missing method and
      * replacing the normal view until the feature is implemented. This exists to assist with wiring, and
      * is reached from the try block each panel's {@code refresh()} wraps around its controller calls.
-     *
      * @param methodName the controller method that is not implemented
      */
     protected final void showNotReady(String methodName) {

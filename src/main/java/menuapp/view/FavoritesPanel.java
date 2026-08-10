@@ -103,9 +103,7 @@ public class FavoritesPanel extends AppPanel {
     }
 
     // Listeners for user actions
-    /**
-     * Wires every control to a controller call followed by a redraw.
-     */
+    /** Wires every control to a controller call followed by a redraw. */
     private void attachListeners() {
         favoritesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -224,8 +222,7 @@ public class FavoritesPanel extends AppPanel {
         return safeName + " (" + itemCount + " " + unit + ")";
     }
 
-    /** Enables only the buttons that make sense for the current selection.
-     */
+    /** Enables only the buttons that make sense for the current selection. */
     private void updateButtonState() {
         removeButton.setEnabled(favoritesTable.getSelectedRow() >= 0);
         saveButton.setEnabled(tableModel.getRowCount() > 0);

@@ -7,7 +7,8 @@ import java.util.*;
 
 /**
  * A stand-in {@link AppController} that lets the favorites screen be built and
- * run before the real controller exists.
+ * run before the real controller exists. This can also work as a reference for the implementation of seventeen
+ * unimplemented controller methods.
  * At integration time nothing in {@code FavoritesPanel} changes. You simply
  * pass the real {@code AppController} into the constructor instead of this one.
  */
