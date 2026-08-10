@@ -17,7 +17,7 @@ might need to be made.
 
 For transparency, these features need to be checked manually by running the program and looking at the screen. This
 is because `MockController` implements all 18 methods, the `showNotReady` branch inherited from `AppPanel` is 
-unreachable in this repository outside of the view specific demos. This document helps explains those manual tests
+unreachable outside the view specific demos. This document helps explains those manual tests
 to cover areas not checked by the automated JUnit tests. 
 
 
@@ -208,7 +208,7 @@ says otherwise.
 
 | ID | Steps | Expected result | Pass / Fail |
 |---|---|---|---|
-| OR-01 | 1. Launch `MockOrderPanelDemo`. 2. Open the Cart tab. | No table. A centred label reads `Your cart is empty. ☺️ Add something from our menu for checkout!` Header reads `Cart (0 items)`. Total reads `Total: $0.00`. | |
+| OR-01 | 1. Launch `MockOrderPanelDemo`. 2. Open the Cart tab. | No table. A centred label reads `Your cart is empty. Add something from our menu for checkout!☺️` Header reads `Cart (0 items)`. Total reads `Total: $0.00`. | |
 | OR-02 | 1. Observe the four buttons on an empty cart. | `−`, `+`, and `Remove` are disabled because nothing is selected. `Checkout` is disabled because the table holds no rows. | |
 
 ## 5.2 Building a cart

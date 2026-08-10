@@ -154,60 +154,60 @@ public class MenuPanel extends AppPanel {
   /** Wires control to a controller call then drawing of layout */
   private void attachListeners() {
     menuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent event) {
-        updateButtonState();
-      }
-    }
+                                                             @Override
+                                                             public void valueChanged(ListSelectionEvent event) {
+                                                               updateButtonState();
+                                                             }
+                                                           }
     );
 
     categoryCombo.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        refresh();
-      }
-    }
+                                      @Override
+                                      public void actionPerformed(ActionEvent event) {
+                                        refresh();
+                                      }
+                                    }
     );
 
     searchButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        refresh();
-      }
-    }
+                                     @Override
+                                     public void actionPerformed(ActionEvent event) {
+                                       refresh();
+                                     }
+                                   }
     );
 
     // Pressing Enter inside the field fires the same path as the button.
     searchField.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        refresh();
-      }
-    }
+                                    @Override
+                                    public void actionPerformed(ActionEvent event) {
+                                      refresh();
+                                    }
+                                  }
     );
 
     showAllButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleShowAll();
-      }
-    }
+                                      @Override
+                                      public void actionPerformed(ActionEvent event) {
+                                        handleShowAll();
+                                      }
+                                    }
     );
 
     addToCartButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleAddToCart();
-      }
-    }
+                                        @Override
+                                        public void actionPerformed(ActionEvent event) {
+                                          handleAddToCart();
+                                        }
+                                      }
     );
 
     addToFavoritesButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleAddToFavorites();
-      }
-    }
+                                             @Override
+                                             public void actionPerformed(ActionEvent event) {
+                                               handleAddToFavorites();
+                                             }
+                                           }
     );
   }
 

@@ -33,40 +33,62 @@ import menuapp.model.MenuItem;
  * and uses refresh(). This is a widget state only.
  */
 public class FavoritesPanel extends AppPanel {
-    /** Column headers for the favorites table. */
+    /**
+     * Column headers for the favorites table.
+     */
     private static final String[] COLUMN_NAMES = ItemTableFormat.columnNames();
-    /** Index of the item-name column to identify a selected row. */
+    /**
+     * Index of the item-name column to identify a selected row.
+     */
     private static final int NAME_COLUMN = 0;
-    /** Shows the list label and how many items it holds. */
+    /**
+     * Shows the list label and how many items it holds.
+     */
     private final JLabel headerLabel;
-    /** Shown in place of the table when the list is empty. */
+    /**
+     * Shown in place of the table when the list is empty.
+     */
     private final JLabel emptyStateLabel;
-    /** Default table that builds wholesale on every refresh. */
+    /**
+     * Default table that builds wholesale on every refresh.
+     */
     private final DefaultTableModel tableModel;
-    /** A read-only for the favorites table. Reminder that edits go through the controller. */
+    /**
+     * A read-only for the favorites table. Reminder that edits go through the controller.
+     */
     private final JTable favoritesTable;
-    /** Scroll container for the table while the list is empty. */
+    /**
+     * Scroll container for the table while the list is empty.
+     */
     private final JScrollPane tableScrollPane;
-    /** Removes the currently selected item and is disabled when nothing is selected. */
+    /**
+     * Removes the currently selected item and is disabled when nothing is selected.
+     */
     private final JButton removeButton;
-    /** Renames the list. */
+    /**
+     * Renames the list.
+     */
     private final JButton renameButton;
-    /** Writes the list to a chosen file and disabled when the list is empty. */
+    /**
+     * Writes the list to a chosen file and disabled when the list is empty.
+     */
     private final JButton saveButton;
-    /** Reads list back from the chosen file. */
+    /**
+     * Reads list back from the chosen file.
+     */
     private final JButton loadButton;
 
 
     /**
      * Builds the favorites screen from current model state.
+     *
      * @param controller the shared controller
      */
     public FavoritesPanel(AppController controller) {
         super(controller, "Favorites");
 
         this.headerLabel = new JLabel();
-        this.emptyStateLabel = new JLabel(
-                "You have no favorites yet! Add items to see them here.", SwingConstants.CENTER);
+        this.emptyStateLabel = new JLabel("You have no favorites yet! Add items to see them here.", SwingConstants.CENTER);
         this.tableModel = new ReadOnlyTableModel(COLUMN_NAMES);
         this.favoritesTable = new JTable(tableModel);
         this.tableScrollPane = new JScrollPane(favoritesTable);
@@ -80,7 +102,9 @@ public class FavoritesPanel extends AppPanel {
         refresh(); // note, might want to turn this into a final class
     }
 
-    /** Arranges the header, table, and button row inside a border layout. */
+    /**
+     * Arranges the header, table, and button row inside a border layout.
+     */
     private void layOutComponents() {
         setLayout(new BorderLayout(0, 8));
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -103,50 +127,49 @@ public class FavoritesPanel extends AppPanel {
     }
 
     // Listeners for user actions
-    /** Wires every control to a controller call followed by a redraw. */
+
+    /**
+     * Wires every control to a controller call followed by a redraw.
+     */
     private void attachListeners() {
         favoritesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
                 updateButtonState();
             }
-        }
-        );
+        });
 
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleRemoveSelected();
             }
-        }
-        );
+        });
 
         renameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleRename();
             }
-        }
-        );
+        });
 
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleSave();
             }
-        }
-        );
+        });
 
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleLoad();
             }
-        }
-        );
+        });
     }
 
 // Table Rendering
+
     /**
      * Redraws the whole screen from current model. Reads fresh favorites list
      * from controller rather than caching it. Method is safe to call after any change.
@@ -181,6 +204,7 @@ public class FavoritesPanel extends AppPanel {
     /**
      * Converts menu items into the row data the table displays. This is a static method
      * with no Swing dependencies so it can be unit tested without opening a window.
+     *
      * @param items the items to display and can be null
      * @return a row holding name, category, and formatted price
      */
@@ -190,6 +214,7 @@ public class FavoritesPanel extends AppPanel {
 
     /**
      * Turns an enum constant into readable text so BEVERAGE reads as Beverage.
+     *
      * @param category the category to format
      * @return the display text for that category
      */
@@ -200,6 +225,7 @@ public class FavoritesPanel extends AppPanel {
     /**
      * Builds the header line above the table. Note, ternary operators converted back to if statements
      * for ease of decoding during testing.
+     *
      * @param listName  the label of the list
      * @param itemCount how many items it holds
      * @return the header text, for example "My Favorites (4 items)"
@@ -222,7 +248,9 @@ public class FavoritesPanel extends AppPanel {
         return safeName + " (" + itemCount + " " + unit + ")";
     }
 
-    /** Enables only the buttons that make sense for the current selection. */
+    /**
+     * Enables only the buttons that make sense for the current selection.
+     */
     private void updateButtonState() {
         removeButton.setEnabled(favoritesTable.getSelectedRow() >= 0);
         saveButton.setEnabled(tableModel.getRowCount() > 0);
@@ -230,6 +258,7 @@ public class FavoritesPanel extends AppPanel {
 
     /**
      * Reads the item name out of the selected row.
+     *
      * @return the selected item name, or null when nothing is selected
      */
     private String getSelectedItemName() {
@@ -240,7 +269,9 @@ public class FavoritesPanel extends AppPanel {
         return String.valueOf(tableModel.getValueAt(selectedRow, NAME_COLUMN));
     }
 
-    /** Removes the selected item, then redraws. */
+    /**
+     * Removes the selected item, then redraws.
+     */
     private void handleRemoveSelected() {
         String itemName = getSelectedItemName();
         if (itemName == null) {
@@ -250,11 +281,12 @@ public class FavoritesPanel extends AppPanel {
         refresh();
     }
 
-    /** Asks for a new list label, applies it, then redraws. */
+    /**
+     * Asks for a new list label, applies it, then redraws.
+     */
     private void handleRename() {
         String currentName = controller.getFavorites().getName();
-        String newName = JOptionPane.showInputDialog(
-                this, "Name for this list:", currentName);
+        String newName = JOptionPane.showInputDialog(this, "Name for this list:", currentName);
         if (newName == null || newName.trim().isEmpty()) {
             return;
         }
@@ -262,12 +294,13 @@ public class FavoritesPanel extends AppPanel {
         refresh();
     }
 
-    /** Asks where to write the list and hands the path to the controller. */
+    /**
+     * Asks where to write the list and hands the path to the controller.
+     */
     private void handleSave() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save favorites");
-        fileChooser.setSelectedFile(
-                new File(controller.getFavorites().getName() + ".json"));
+        fileChooser.setSelectedFile(new File(controller.getFavorites().getName() + ".json"));
         if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -279,7 +312,9 @@ public class FavoritesPanel extends AppPanel {
         refresh();
     }
 
-    /** Asks which file to read and hands the path to the controller. */
+    /**
+     * Asks which file to read and hands the path to the controller.
+     */
     private void handleLoad() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Load favorites");
@@ -309,6 +344,7 @@ public class FavoritesPanel extends AppPanel {
      * TODO: replace the body with {@code controller.renameFavorites(newName)}
      * once that method is added to {@link AppController}. Same temporary shortcut
      * as {@link #removeFavorite(String)}.
+     *
      * @param newName the new label for the list
      */
     private void renameFavorites(String newName) {

@@ -1,6 +1,7 @@
 package menuapp.view;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,7 +30,9 @@ public class RoleSelectionPanelTest {
         }
     }
 
-    /** Roles can't share one label, meaning every role must produce a different button label. */
+    /**
+     * Roles can't share one label, meaning every role must produce a different button label.
+     */
     @Test
     public void buttonTextUniqueEachRole() {
         Set<String> labels = new HashSet<String>(); // set so no duplicate
@@ -39,13 +42,17 @@ public class RoleSelectionPanelTest {
         assertEquals(Role.values().length, labels.size());
     }
 
-    /** If a role is missing returns as an actual blank and not null. */
+    /**
+     * If a role is missing returns as an actual blank and not null.
+     */
     @Test
     public void buttonTextForHandlingNull() {
         assertEquals("", RoleSelectionPanel.buttonTextFor(null));
     }
 
-    /** Testing to make sure there's an actual heading that users can read */
+    /**
+     * Testing to make sure there's an actual heading that users can read
+     */
     @Test
     public void titleTextVisible() {
         assertFalse(RoleSelectionPanel.TITLE_TEXT.trim().isEmpty());

@@ -2,8 +2,10 @@ package menuapp.view;
 
 import java.util.List;
 import java.util.Locale;
+
 import menuapp.model.Category;
 import menuapp.model.MenuItem;
+
 import java.awt.Image;
 import java.net.URL;
 import javax.swing.ImageIcon;
@@ -14,21 +16,29 @@ import javax.swing.ImageIcon;
  * Conversion from model object to display text lives here only once instead copying each individually per panel.
  */
 final class ItemTableFormat {
-    /** Column headers shared by every item table. */
+    /**
+     * Column headers shared by every item table.
+     */
     private static final String[] COLUMN_NAMES = {"Item", "Category", "Price"};
-    /** Index of the item name column, the column that identifies a selected row. */
-    /** Width every preview is scaled to */
+    /**
+     * Width every preview is scaled to
+     */
     static final int PREVIEW_WIDTH = 160;
-    /** Height every preview is scaled to. */
+    /**
+     * Height every preview is scaled to.
+     */
     static final int PREVIEW_HEIGHT = 120;
 
-    /** Prevents instantiation; this is a holder for static helpers only. */
+    /**
+     * Prevents instantiation; this is a holder for static helpers only.
+     */
     private ItemTableFormat() {
         throw new AssertionError("ItemTableFormat is not meant to be instantiated");
     }
 
     /**
      * Returns the column headers for an item table as a fresh copy on every call.
+     *
      * @return a new array holding the three column headers, in display order
      */
     static String[] columnNames() {
@@ -37,6 +47,7 @@ final class ItemTableFormat {
 
     /**
      * Converts menu items into the row data a {@code DefaultTableModel} displays.
+     *
      * @param items the items to display, may be null
      * @return one row per item holding name, readable category, formatted price and null if empty
      */
@@ -56,6 +67,7 @@ final class ItemTableFormat {
 
     /**
      * Turns an enum constant into readable text, so {@code BEVERAGE} reads as {@code Beverage}.
+     *
      * @param category the category to format, may be null
      * @return the display text for that category, or an empty string when null
      */
@@ -69,6 +81,7 @@ final class ItemTableFormat {
     /**
      * Turns any enum constant name into readable display text, so {@code BEVERAGE} reads as {@code Beverage}
      * and {@code CUSTOMER} reads as {@code Customer}.
+     *
      * @param rawName the enum constant name, may be null or empty
      * @return the display text, or an empty string when there is nothing to
      * format
@@ -85,6 +98,7 @@ final class ItemTableFormat {
      * {@link Locale#US} is passed so the separator is a dot on every machine.
      * Without it the same code prints {@code $14,50} under a European default locale.
      * TODO: Note to me, come back here later--maybe I can do an enum for setting locale?
+     *
      * @param price the price in dollars
      * @return the price as text, for example {@code $14.50}
      */
@@ -96,8 +110,9 @@ final class ItemTableFormat {
      * Decides which row should stay selected after the table is rebuilt. It keeps the previous row selected
      * when possible, uses the new last row if that row no longer exists, and selects nothing when the table
      * is empty or no row was selected before.
+     *
      * @param previousRow the row selected before the rebuild, or -1 when nothing was selected
-     * @param rowCount how many rows the table contains after the rebuild
+     * @param rowCount    how many rows the table contains after the rebuild
      * @return the row to select, or -1 when nothing should be selected
      */
     static int clampSelection(int previousRow, int rowCount) {
@@ -115,6 +130,7 @@ final class ItemTableFormat {
      * Three things can go wrong: the item might have no picture name saved, the name might point to a file
      * that isn't there, or the file might be there but unreadable (corrupted, or not really an image).
      * Whatever code called this then shows the item's name as plain text.
+     *
      * @param imagePath where to look for the picture file; may be null or empty
      * @return the scaled picture, or null if there was nothing to show
      */
@@ -131,8 +147,7 @@ final class ItemTableFormat {
         if (original.getIconWidth() <= 0) {
             return null;
         }
-        Image scaled = original.getImage().getScaledInstance(
-                PREVIEW_WIDTH, PREVIEW_HEIGHT, Image.SCALE_SMOOTH);
+        Image scaled = original.getImage().getScaledInstance(PREVIEW_WIDTH, PREVIEW_HEIGHT, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
     }
 

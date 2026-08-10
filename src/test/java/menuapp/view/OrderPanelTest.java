@@ -1,6 +1,7 @@
 package menuapp.view;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
@@ -21,8 +22,9 @@ public class OrderPanelTest {
     /**
      * Builds menu item for item name, unit price, item category, and menu item. Image not implemented at this time so
      * no image.
-     * @param name item name
-     * @param price unit price
+     *
+     * @param name     item name
+     * @param price    unit price
      * @param category item category
      * @return a menu item
      */
@@ -53,7 +55,9 @@ public class OrderPanelTest {
         assertEquals("Subtotal", names[3]);
     }
 
-    /** Each caller gets its own array so no one panel can overwrite another's headers. */
+    /**
+     * Each caller gets its own array so no one panel can overwrite another's headers.
+     */
     @Test
     public void cartColumnNamesHandsBackAFreshArray() {
         assertNotSame(OrderPanel.cartColumnNames(), OrderPanel.cartColumnNames());
@@ -61,7 +65,9 @@ public class OrderPanelTest {
 
     // Row Building
 
-    /** One row per cart line with a total of four cells each. */
+    /**
+     * One row per cart line with a total of four cells each.
+     */
     @Test
     public void buildCartRowsProducesOneRowPerLine() {
         Object[][] rows = OrderPanel.buildCartRows(cartFixture());
@@ -69,13 +75,17 @@ public class OrderPanelTest {
         assertEquals(4, rows[0].length);
     }
 
-    /** A null cart is treated like an empty one rather than throwing. */
+    /**
+     * A null cart is treated like an empty one rather than throwing.
+     */
     @Test
     public void buildCartRowsHandlesNull() {
         assertEquals(0, OrderPanel.buildCartRows(null).length);
     }
 
-    /** Table does not reshuffle on every redraw. */
+    /**
+     * Table does not reshuffle on every redraw.
+     */
     @Test
     public void buildCartRowsKeepsInsertionOrder() {
         Object[][] rows = OrderPanel.buildCartRows(cartFixture());
@@ -84,7 +94,9 @@ public class OrderPanelTest {
         assertEquals("Yuenyeung", rows[2][0]);
     }
 
-    /** Price column shows unit price only and not the line total. */
+    /**
+     * Price column shows unit price only and not the line total.
+     */
     @Test
     public void buildCartRowsShowsUnitPrice() {
         Object[][] rows = OrderPanel.buildCartRows(cartFixture());
@@ -93,7 +105,9 @@ public class OrderPanelTest {
         assertEquals("$4.00", rows[2][1]);
     }
 
-    /** Quantity renders as display text like every other cell. */
+    /**
+     * Quantity renders as display text like every other cell.
+     */
     @Test
     public void buildCartRowsRendersQuantityAsText() {
         Object[][] rows = OrderPanel.buildCartRows(cartFixture());
@@ -102,7 +116,9 @@ public class OrderPanelTest {
         assertEquals("4", rows[2][2]);
     }
 
-    /** The subtotal column multiplies unit price by quantity. */
+    /**
+     * The subtotal column multiplies unit price by quantity.
+     */
     @Test
     public void buildCartRowsMultipliesSubtotal() {
         Object[][] rows = OrderPanel.buildCartRows(cartFixture());
@@ -113,7 +129,9 @@ public class OrderPanelTest {
 
     // Header and total lines
 
-    /** Header text reflects the number of distinct lines. */
+    /**
+     * Header text reflects the number of distinct lines.
+     */
     @Test
     public void buildHeaderTextPluralisesOnLineCount() {
         assertEquals("Cart (1 item)", OrderPanel.buildHeaderText(1));
@@ -121,7 +139,9 @@ public class OrderPanelTest {
         assertEquals("Cart (0 items)", OrderPanel.buildHeaderText(0));
     }
 
-    /** The total line is carries only two decimal places. */
+    /**
+     * The total line is carries only two decimal places.
+     */
     @Test
     public void buildTotalTextLabelsAndFormats() {
         assertEquals("Total: $37.00", OrderPanel.buildTotalText(37.0));
@@ -129,20 +149,27 @@ public class OrderPanelTest {
     }
 
     // Reading a quantity back out of the cart
-    /** Cart reports item current quantity. */
+
+    /**
+     * Cart reports item current quantity.
+     */
     @Test
     public void quantityOfFindsTheLine() {
         assertEquals(1, OrderPanel.quantityOf(cartFixture(), "Cazuela de castañas"));
         assertEquals(10, OrderPanel.quantityOf(cartFixture(), "Štrúdl"));
     }
 
-    /** A name not in the cart reads as zero rather than throwing. */
+    /**
+     * A name not in the cart reads as zero rather than throwing.
+     */
     @Test
     public void quantityOfReturnsZeroWhenAbsent() {
         assertEquals(0, OrderPanel.quantityOf(cartFixture(), "Grilled Salmon"));
     }
 
-    /** A null cart or a null name reads as zero so that a stale click cannot crash a redraw. */
+    /**
+     * A null cart or a null name reads as zero so that a stale click cannot crash a redraw.
+     */
     @Test
     public void quantityOfHandlesNull() {
         assertEquals(0, OrderPanel.quantityOf(null, "Štrúdl"));
@@ -150,6 +177,7 @@ public class OrderPanelTest {
     }
 
     // Decreasing Number Works
+
     /**
      * At quantity one, decreasing would call {@code Order.setQuantity} with zero,
      * which throws. Result is that the line is removed instead.
@@ -159,7 +187,9 @@ public class OrderPanelTest {
         assertEquals(true, OrderPanel.shouldRemoveOnDecrease(1));
     }
 
-    /** If Above one then decreasing is a plain quantity change. */
+    /**
+     * If Above one then decreasing is a plain quantity change.
+     */
     @Test
     public void shouldNotRemoveOnDecreaseAboveOne() {
         assertEquals(false, OrderPanel.shouldRemoveOnDecrease(2));
@@ -177,7 +207,10 @@ public class OrderPanelTest {
     }
 
     // Selection survival across a redraw
-    /** A selection still inside the table survives the rebuild unchanged. */
+
+    /**
+     * A selection still inside the table survives the rebuild unchanged.
+     */
     @Test
     public void clampSelectionKeepsAValidRow() {
         assertEquals(1, OrderPanel.clampSelection(1, 3));
@@ -194,14 +227,18 @@ public class OrderPanelTest {
         assertEquals(0, OrderPanel.clampSelection(5, 1));
     }
 
-    /** An empty table can select nothing. */
+    /**
+     * An empty table can select nothing.
+     */
     @Test
     public void clampSelectionReturnsNothingForAnEmptyTable() {
         assertEquals(-1, OrderPanel.clampSelection(0, 0));
         assertEquals(-1, OrderPanel.clampSelection(-1, 0));
     }
 
-    /** No prior selection stays no selection. */
+    /**
+     * No prior selection stays no selection.
+     */
     @Test
     public void clampSelectionKeepsAnAbsentSelectionAbsent() {
         assertEquals(-1, OrderPanel.clampSelection(-1, 4));

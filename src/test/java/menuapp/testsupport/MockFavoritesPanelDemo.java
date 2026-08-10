@@ -1,12 +1,12 @@
-package menuapp.view_testsupport;
+package menuapp.testsupport;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import menuapp.view.FavoritesPanel;
 
 /**
- * Throwaway launcher with FavoritesPane as a bare window. 
- * It can be looked at and clicked through before wiring. Delete this class once the 
+ * Throwaway launcher with FavoritesPane as a bare window.
+ * It can be looked at and clicked through before wiring. Delete this class once the
  * real frame is wired up.
  */
 public class MockFavoritesPanelDemo {

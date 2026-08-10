@@ -40,35 +40,65 @@ import javax.swing.event.ListSelectionListener;
  * 3. Handlers - These identify a target, call the controller, and redraw.
  */
 public class InventoryPanel extends AppPanel {
-    /** Shows how many items carry a stock entry. */
+    /**
+     * Shows how many items carry a stock entry.
+     */
     private final JLabel headerLabel;
-    /** Shown in place of the two tables when nothing is stocked at all. */
+    /**
+     * Shown in place of the two tables when nothing is stocked at all.
+     */
     private final JLabel emptyStateLabel;
-    /** Holds both tables. This is the swappable center region. */
+    /**
+     * Holds both tables. This is the swappable center region.
+     */
     private final JPanel contentPanel;
-    /** Read-only model behind the full stock table, rebuilt wholesale on every redraw. */
+    /**
+     * Read-only model behind the full stock table, rebuilt wholesale on every redraw.
+     */
     private final DefaultTableModel stockTableModel;
-    /** Shows every stocked item. The only table a restock target is chosen from. */
+    /**
+     * Shows every stocked item. The only table a restock target is chosen from.
+     */
     private final JTable stockTable;
-    /** Scroll container for the stock table. */
+    /**
+     * Scroll container for the stock table.
+     */
     private final JScrollPane stockScrollPane;
-    /** Names the threshold the sub-list was built from, and how many items matched. */
+    /**
+     * Names the threshold the sub-list was built from, and how many items matched.
+     */
     private final JLabel lowStockHeaderLabel;
-    /** Read-only model behind the low stock sub-list.*/
+    /**
+     * Read-only model behind the low stock sub-list.
+     */
     private final DefaultTableModel lowStockTableModel;
-    /** Shows the sub-list. Display only, so the restock target is never ambiguous. */
+    /**
+     * Shows the sub-list. Display only, so the restock target is never ambiguous.
+     */
     private final JTable lowStockTable;
-    /** Scroll container for the sub-list table. */
+    /**
+     * Scroll container for the sub-list table.
+     */
     private final JScrollPane lowStockScrollPane;
-    /** Where the staff type the threshold to build the sub-list from. */
+    /**
+     * Where the staff type the threshold to build the sub-list from.
+     */
     private final JTextField thresholdField;
-    /** Applies whatever the threshold field currently holds. */
+    /**
+     * Applies whatever the threshold field currently holds.
+     */
     private final JButton applyThresholdButton;
-    /** Writes the current sub-list to a JSON file. */
+    /**
+     * Writes the current sub-list to a JSON file.
+     */
     private final JButton exportButton;
-    /** Where the staff type how many units to add to the selected item. */
+    /**
+     * Where the staff type how many units to add to the selected item.
+     */
     private final JTextField restockAmountField;
-    /** Adds that many units to the selected item. */
+    /**
+     * Adds that many units to the selected item.
+     */
     private final JButton restockButton;
 
     /**
@@ -80,6 +110,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Creates the inventory screen.
+     *
      * @param controller the shared controller
      */
     public InventoryPanel(AppController controller) {
@@ -143,6 +174,7 @@ public class InventoryPanel extends AppPanel {
     /**
      * Builds the right side of the panel for displaying low-stock items. This section contains the threshold controls,
      * the low-stock table, and the export button.
+     *
      * @return the completed panel for the low-stock section
      */
     private JPanel buildLowStockSide() {
@@ -179,48 +211,42 @@ public class InventoryPanel extends AppPanel {
             public void valueChanged(ListSelectionEvent event) {
                 updateButtonState();
             }
-        }
-        );
+        });
 
         restockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleRestock();
             }
-        }
-        );
+        });
 
         restockAmountField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleRestock();
             }
-        }
-        );
+        });
 
         applyThresholdButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleApplyThreshold();
             }
-        }
-        );
+        });
 
         thresholdField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleApplyThreshold();
             }
-        }
-        );
+        });
 
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 handleExport();
             }
-        }
-        );
+        });
     }
 
     /**
@@ -264,10 +290,12 @@ public class InventoryPanel extends AppPanel {
     }
 
     // Private Helpers Section
+
     /**
      * Reads the item name out of the selected row. A row holds only display
      * text, and every inventory call is keyed by name, so no model object is
      * needed.
+     *
      * @return the selected item name, or null when nothing is selected
      */
     private String getSelectedItemName() {
@@ -280,6 +308,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Reinstates a row selection after the stock table has been rebuilt.
+     *
      * @param previousRow the row that was selected before the rebuild
      */
     private void restoreSelection(int previousRow) {
@@ -299,6 +328,7 @@ public class InventoryPanel extends AppPanel {
     }
 
     // Handlers whose role are to identify a target, validate input, call the controller, and redraw
+
     /**
      * Adds the typed number of units to the selected item, then redraws. Rejected input stops here rather than
      * reaching the controller, and leaves the screen untouched: nothing changed, so there is nothing to
@@ -370,9 +400,10 @@ public class InventoryPanel extends AppPanel {
      * Tells the user their typed number was rejected, and why. This is a warning rather than {@code showFailure},
      * because nothing was attempted and nothing failed. {@code showFailure} needs a {@code RuntimeException} to
      * report, and manufacturing one to describe a typo would be using an exception for ordinary control flow.
+     *
      * @param fieldLabel the name of the field, as the user sees it
-     * @param rawText the text that was rejected
-     * @param minimum the floor that was applied
+     * @param rawText    the text that was rejected
+     * @param minimum    the floor that was applied
      */
     private void showInvalidNumber(String fieldLabel, String rawText, int minimum) {
         JOptionPane.showMessageDialog(this, buildInvalidNumberMessage(fieldLabel, rawText, minimum), SCREEN_TITLE, JOptionPane.WARNING_MESSAGE);
@@ -380,10 +411,14 @@ public class InventoryPanel extends AppPanel {
 
 
     // Statics Section: display text and decisions about values, with no widget in sight
-    /** Column headers shared by the stock table and the low stock sub-list table. */
+    /**
+     * Column headers shared by the stock table and the low stock sub-list table.
+     */
     private static final String[] STOCK_COLUMN_NAMES = {"Item", "In stock"};
 
-    /** Index of the item name column, the column that identifies a selected row. */
+    /**
+     * Index of the item name column, the column that identifies a selected row.
+     */
     static final int STOCK_NAME_COLUMN = 0;
 
     /**
@@ -399,11 +434,14 @@ public class InventoryPanel extends AppPanel {
      */
     static final int DEFAULT_THRESHOLD = 5;
 
-    /** Extension the export is guaranteed to carry, since the file must be JSON. */
+    /**
+     * Extension the export is guaranteed to carry, since the file must be JSON.
+     */
     private static final String JSON_EXTENSION = ".json";
 
     /**
      * Returns the column headers for a stock table as a fresh copy on every call.
+     *
      * @return a new array holding the two headers, in display order
      */
     static String[] stockColumnNames() {
@@ -413,6 +451,7 @@ public class InventoryPanel extends AppPanel {
     /**
      * Creates the rows used to display the inventory in a table. The item names
      * are sorted before being added to the table.
+     *
      * @param stock the item names and their current stock amounts
      * @return the inventory data as rows for the table
      */
@@ -435,8 +474,9 @@ public class InventoryPanel extends AppPanel {
     /**
      * Creates table rows for items that are low in stock. If an item's stock
      * amount is missing, it is shown as zero.
+     *
      * @param lowStockNames the names of the low-stock items
-     * @param stock the items and their current stock amounts
+     * @param stock         the items and their current stock amounts
      * @return the low-stock items as rows for the table
      */
     static Object[][] buildLowStockRows(List<String> lowStockNames, Map<String, Integer> stock) {
@@ -454,8 +494,9 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Reads one count out of a stock snapshot.
+     *
      * @param stock the snapshot, may be null
-     * @param name the item to look up
+     * @param name  the item to look up
      * @return the units in stock, or zero when the snapshot or the entry is absent
      */
     private static int stockOf(Map<String, Integer> stock, String name) {
@@ -467,6 +508,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Builds the header line above the stock table.
+     *
      * @param itemCount how many items carry a stock entry
      * @return the header text for the inventory table
      */
@@ -476,6 +518,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Creates the text shown above the low-stock list.
+     *
      * @param threshold the stock limit used to find low-stock items
      * @param itemCount the number of low-stock items
      * @return the header text for the low-stock list
@@ -486,6 +529,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Picks the singular or plural noun for a count.
+     *
      * @param count the number being described
      * @return {@code item} at exactly one, {@code items} otherwise
      */
@@ -495,7 +539,8 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Converts the user's text into a whole number. The number must be equal to or greater than the minimum value.
-     * @param text the text entered by the user
+     *
+     * @param text    the text entered by the user
      * @param minimum the smallest number allowed, must be zero or more
      * @return the number, or an INVALID_NUMBER if the input is not valid
      */
@@ -521,9 +566,10 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Creates an error message when the user enters an invalid number.
+     *
      * @param fieldLabel the name of the input field
-     * @param rawText the text entered by the user
-     * @param minimum the smallest number allowed
+     * @param rawText    the text entered by the user
+     * @param minimum    the smallest number allowed
      * @return the error message to show the user
      */
     static String buildInvalidNumberMessage(String fieldLabel, String rawText, int minimum) {
@@ -537,6 +583,7 @@ public class InventoryPanel extends AppPanel {
 
     /**
      * Makes sure the file name ends with .json. If the path is empty or missing, it is returned without changes.
+     *
      * @param path the file path entered by the user
      * @return the file path with .json added when needed
      */
@@ -554,12 +601,18 @@ public class InventoryPanel extends AppPanel {
         return trimmed + JSON_EXTENSION;
     }
 
-    /** Title on this screen's dialogs, both the base class's and this panel's own. */
+    /**
+     * Title on this screen's dialogs, both the base class's and this panel's own.
+     */
     private static final String SCREEN_TITLE = "Inventory";
 
-    /** Lowest legal restock amount. {@code Inventory.increase} throws below this. */
+    /**
+     * Lowest legal restock amount. {@code Inventory.increase} throws below this.
+     */
     private static final int RESTOCK_MINIMUM = 1;
 
-    /** Lowest legal threshold. Zero is meaningful: it asks what is completely out. */
+    /**
+     * Lowest legal threshold. Zero is meaningful: it asks what is completely out.
+     */
     private static final int THRESHOLD_MINIMUM = 0;
 }

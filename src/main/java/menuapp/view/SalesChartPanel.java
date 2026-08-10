@@ -19,29 +19,36 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * is refreshed using the latest revenue data from the controller.
  */
 public class SalesChartPanel extends AppPanel {
-    /** Shows the running total above the chart.*/
+    /**
+     * Shows the running total above the chart.
+     */
     private final JLabel headerLabel;
-    /** Shown in place of the chart before any sale has been recorded. */
+    /**
+     * Shown in place of the chart before any sale has been recorded.
+     */
     private final JLabel emptyStateLabel;
-    /** The numbers the chart draws. Updated in place, never rebuilt. */
+    /**
+     * The numbers the chart draws. Updated in place, never rebuilt.
+     */
     private final DefaultCategoryDataset dataset;
-    /** The chart's container. This is the swappable center region. */
+    /**
+     * The chart's container. This is the swappable center region.
+     */
     private final ChartPanel chartPanel;
 
     /**
      * Creates the sales chart screen.
+     *
      * @param controller the shared controller
      */
     public SalesChartPanel(AppController controller) {
         super(controller, "Sales");
 
         this.headerLabel = new JLabel();
-        this.emptyStateLabel = new JLabel(
-                "No sales yet. Check out an order to see revenue here!", SwingConstants.CENTER);
+        this.emptyStateLabel = new JLabel("No sales yet. Check out an order to see revenue here!", SwingConstants.CENTER);
         this.dataset = new DefaultCategoryDataset();
 
-        JFreeChart chart = ChartFactory.createBarChart(
-                CHART_TITLE, CATEGORY_AXIS_LABEL, VALUE_AXIS_LABEL, dataset);
+        JFreeChart chart = ChartFactory.createBarChart(CHART_TITLE, CATEGORY_AXIS_LABEL, VALUE_AXIS_LABEL, dataset);
         this.chartPanel = new ChartPanel(chart);
 
         // Dependency chain. Do not reorder!
@@ -78,8 +85,7 @@ public class SalesChartPanel extends AppPanel {
         }
 
         for (Category category : Category.values()) {
-            dataset.setValue(revenueFor(revenue, category),
-                    REVENUE_SERIES, ItemTableFormat.formatCategory(category));
+            dataset.setValue(revenueFor(revenue, category), REVENUE_SERIES, ItemTableFormat.formatCategory(category));
         }
         headerLabel.setText(buildHeaderText(totalOf(revenue)));
         showEmptyState(!hasRevenue(revenue), chartPanel, emptyStateLabel);
@@ -87,17 +93,26 @@ public class SalesChartPanel extends AppPanel {
 
     // Statics--decisions about values but with no chart
 
-    /** Title drawn above the bars by JFreeChart. */
+    /**
+     * Title drawn above the bars by JFreeChart.
+     */
     private static final String CHART_TITLE = "Revenue by category";
-    /** Label under the horizontal axis. */
+    /**
+     * Label under the horizontal axis.
+     */
     private static final String CATEGORY_AXIS_LABEL = "Category";
-    /** Label beside the vertical axis. */
+    /**
+     * Label beside the vertical axis.
+     */
     private static final String VALUE_AXIS_LABEL = "Revenue ($)";
-    /** The single series every bar belongs to. One series means one bar per category. */
+    /**
+     * The single series every bar belongs to. One series means one bar per category.
+     */
     private static final String REVENUE_SERIES = "Revenue";
 
     /**
      * Reads one category's revenue out of the map.
+     *
      * @param revenue  revenue accumulated per category, may be null
      * @param category the category to look up, may be null
      * @return the revenue for that category, or zero when it is absent
@@ -115,6 +130,7 @@ public class SalesChartPanel extends AppPanel {
 
     /**
      * Adds up revenue across every category.
+     *
      * @param revenue revenue accumulated per category, may be null
      * @return the total, or zero when there is nothing to add
      */
@@ -132,6 +148,7 @@ public class SalesChartPanel extends AppPanel {
     /**
      * Reports whether anything has been earned yet. A chart of three flat bars
      * tells the reader nothing, so the empty state is shown instead.
+     *
      * @param revenue revenue accumulated per category, may be null
      * @return true when at least one category is above zero
      */
@@ -141,6 +158,7 @@ public class SalesChartPanel extends AppPanel {
 
     /**
      * Builds the header line above the chart.
+     *
      * @param totalRevenue revenue across every category
      * @return the header text, for example {@code Revenue by category (total $69.10)}
      */

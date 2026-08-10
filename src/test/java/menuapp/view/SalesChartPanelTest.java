@@ -19,6 +19,7 @@ public class SalesChartPanelTest {
 
     /**
      * Revenue with two categories earning and one still at zero.
+     *
      * @return the fixture map
      */
     private Map<Category, Double> revenueFixture() {
@@ -29,8 +30,11 @@ public class SalesChartPanelTest {
         return revenue;
     }
 
-    // Reading one category only
-    /** A category that has earned reports what it earned. */
+    // Reading one category
+
+    /**
+     * A category that has earned reports what it earned.
+     */
     @Test
     public void revenueForFindsTheCategory() {
         assertEquals(62.50, SalesChartPanel.revenueFor(revenueFixture(), Category.MAIN));
@@ -48,7 +52,9 @@ public class SalesChartPanelTest {
         assertEquals(0.0, SalesChartPanel.revenueFor(revenue, Category.BEVERAGE));
     }
 
-    /** A null map or a null category reads as zero rather than throwing. */
+    /**
+     * A null map or a null category reads as zero rather than throwing.
+     */
     @Test
     public void revenueForHandlesNull() {
         assertEquals(0.0, SalesChartPanel.revenueFor(null, Category.MAIN));
@@ -56,13 +62,18 @@ public class SalesChartPanelTest {
     }
 
     // Totalling revenue
-    /** The total is the sum of every category. */
+
+    /**
+     * The total is the sum of every category.
+     */
     @Test
     public void totalOfSumsEveryCategory() {
         assertEquals(69.10, SalesChartPanel.totalOf(revenueFixture()), 0.001);
     }
 
-    /** Nothing to total is zero, so this is not an error. */
+    /**
+     * Nothing to total is zero, so this is not an error.
+     */
     @Test
     public void totalOfHandlesNullAndEmpty() {
         assertEquals(0.0, SalesChartPanel.totalOf(null));
@@ -71,7 +82,9 @@ public class SalesChartPanelTest {
 
     // Deciding whether there is anything to draw
 
-    /** Any category above zero means there is a chart worth showing. */
+    /**
+     * Any category above zero means there is a chart worth showing.
+     */
     @Test
     public void hasRevenueIsTrueWhenSomethingEarned() {
         assertTrue(SalesChartPanel.hasRevenue(revenueFixture()));
@@ -91,7 +104,9 @@ public class SalesChartPanelTest {
         assertFalse(SalesChartPanel.hasRevenue(revenue));
     }
 
-    /** An empty or missing map is the same as nothing earned. */
+    /**
+     * An empty or missing map is the same as nothing earned.
+     */
     @Test
     public void hasRevenueHandlesNullAndEmpty() {
         assertFalse(SalesChartPanel.hasRevenue(null));
@@ -99,12 +114,13 @@ public class SalesChartPanelTest {
     }
 
     // Header line
-    /** The header carries the running total, formatted as currency. */
+
+    /**
+     * The header carries the running total, formatted as currency.
+     */
     @Test
     public void buildHeaderTextShowsTheTotal() {
-        assertEquals("Revenue by category (total $69.10)",
-                SalesChartPanel.buildHeaderText(69.10));
-        assertEquals("Revenue by category (total $0.00)",
-                SalesChartPanel.buildHeaderText(0.0));
+        assertEquals("Revenue by category (total $69.10)", SalesChartPanel.buildHeaderText(69.10));
+        assertEquals("Revenue by category (total $0.00)", SalesChartPanel.buildHeaderText(0.0));
     }
 }

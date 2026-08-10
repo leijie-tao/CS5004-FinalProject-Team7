@@ -2,8 +2,10 @@ package menuapp.testsupport;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
 import menuapp.view.MenuPanel;
 import menuapp.view.OrderPanel;
+
 import javax.swing.JTabbedPane;
 
 /**
@@ -15,6 +17,7 @@ public class MockOrderPanelDemo {
 
     /**
      * Opens a two tab window driven by a single fake controller.
+     *
      * @param args unused
      */
     public static void main(String[] args) {
@@ -25,7 +28,7 @@ public class MockOrderPanelDemo {
                 MockController sharedController = new MockController();
                 JTabbedPane tabs = new JTabbedPane();
                 tabs.addTab("Menu", new MenuPanel(sharedController));
-                tabs.addTab("Cart",  new OrderPanel(sharedController));
+                tabs.addTab("Cart", new OrderPanel(sharedController));
 
                 JFrame demoFrame = new JFrame("Order Panel Demo ONLY");
                 demoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,7 +37,6 @@ public class MockOrderPanelDemo {
                 demoFrame.setLocationRelativeTo(null);
                 demoFrame.setVisible(true);
             }
-        }
-        );
+        });
     }
 }

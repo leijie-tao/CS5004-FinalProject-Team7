@@ -1,6 +1,7 @@
-package menuapp.view_testsupport;
+package menuapp.testsupport;
 
 import javax.swing.SwingUtilities;
+
 import menuapp.view.MainFrame;
 
 /**
@@ -12,6 +13,7 @@ public class MockMainFrameDemo {
 
     /**
      * Opens the real window on the event dispatch thread.
+     *
      * @param args unused
      */
     public static void main(String[] args) {
@@ -20,7 +22,6 @@ public class MockMainFrameDemo {
             public void run() {
                 new MainFrame(new MockController()).setVisible(true);
             }
-        }
-        );
+        });
     }
 }
