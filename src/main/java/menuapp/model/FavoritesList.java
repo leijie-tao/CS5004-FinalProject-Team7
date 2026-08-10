@@ -62,7 +62,7 @@ public class FavoritesList {
    */
   public boolean contains(String name) {
     for(MenuItem item : items) {
-      if(item.getName().contains(name)) {
+      if(item.getName().equals(name)) {
         return true;
       }
     }
