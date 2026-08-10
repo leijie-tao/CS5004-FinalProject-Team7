@@ -1,5 +1,7 @@
 package menuapp.model;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,23 +11,34 @@ import java.util.Map;
  */
 public class Order {
 
+  /** Cart lines, item to quantity, kept in insertion order for a stable display. */
+  private final Map<MenuItem, Integer> items = new LinkedHashMap<>();
+
   /**
    * Adds one unit of an item, or raises its quantity by one.
    *
    * @param item the item to add
    */
   public void add(MenuItem item) {
-    throw new UnsupportedOperationException("TODO");
+    add(item, 1);
   }
 
   /**
-   * Adds a given quantity of an item.
+   * Adds a given quantity of an item, accumulating with any quantity already
+   * in the cart.
    *
    * @param item the item to add
    * @param quantity how many units, must be positive
+   * @throws IllegalArgumentException when item is null or quantity is not positive
    */
   public void add(MenuItem item, int quantity) {
-    throw new UnsupportedOperationException("TODO");
+    if (item == null) {
+      throw new IllegalArgumentException("Item must not be null");
+    }
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("Quantity must be positive: " + quantity);
+    }
+    items.merge(item, quantity, Integer::sum);
   }
 
   /**
@@ -33,9 +46,18 @@ public class Order {
    *
    * @param name the name of the item
    * @param quantity the new quantity, must be positive
+   * @throws IllegalArgumentException when quantity is not positive, or when no
+   *     item with that name is in the cart
    */
   public void setQuantity(String name, int quantity) {
-    throw new UnsupportedOperationException("TODO");
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("Quantity must be positive: " + quantity);
+    }
+    MenuItem key = findByName(name);
+    if (key == null) {
+      throw new IllegalArgumentException("Item not in cart: " + name);
+    }
+    items.put(key, quantity);
   }
 
   /**
@@ -45,31 +67,57 @@ public class Order {
    * @return true when the item was present
    */
   public boolean remove(String name) {
-    throw new UnsupportedOperationException("TODO");
+    MenuItem key = findByName(name);
+    if (key == null) {
+      return false;
+    }
+    items.remove(key);
+    return true;
   }
 
-  /** @return the distinct items in the cart */
+  /** @return the distinct items in the cart, a fresh list in insertion order */
   public List<MenuItem> getItems() {
-    throw new UnsupportedOperationException("TODO");
+    return new ArrayList<>(items.keySet());
   }
 
-  /** @return each item paired with its quantity */
+  /** @return each item paired with its quantity, a fresh map in insertion order */
   public Map<MenuItem, Integer> getItemsWithQuantities() {
-    throw new UnsupportedOperationException("TODO");
+    return new LinkedHashMap<>(items);
   }
 
   /** @return the total price across all items and quantities */
   public double getTotal() {
-    throw new UnsupportedOperationException("TODO");
+    double total = 0.0;
+    for (Map.Entry<MenuItem, Integer> entry : items.entrySet()) {
+      total += entry.getKey().getPrice() * entry.getValue();
+    }
+    return total;
   }
 
   /** @return the number of distinct items */
   public int size() {
-    throw new UnsupportedOperationException("TODO");
+    return items.size();
   }
 
   /** Empties the cart. */
   public void clear() {
-    throw new UnsupportedOperationException("TODO");
+    items.clear();
+  }
+
+  /**
+   * Finds the cart key whose name matches, or null when it is absent. The cart
+   * is keyed by item, but callers reference lines by name, so the lookup walks
+   * the keys and compares names.
+   *
+   * @param name the item name to look for
+   * @return the matching key, or null when no line has that name
+   */
+  private MenuItem findByName(String name) {
+    for (MenuItem item : items.keySet()) {
+      if (item.getName().equals(name)) {
+        return item;
+      }
+    }
+    return null;
   }
 }
