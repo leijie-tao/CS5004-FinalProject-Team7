@@ -77,7 +77,7 @@ final class ItemTableFormat {
      * Formats a price for display with two decimal places.
      * {@link Locale#US} is passed so the separator is a dot on every machine.
      * Without it the same code prints {@code $14,50} under a European default locale.
-     * (TODO: Note to me, come back here later--maybe I can do an enum for setting lcoale?)
+     * TODO: Note to me, come back here later--maybe I can do an enum for setting lcoale?
      * @param price the price in dollars
      * @return the price as text, for example {@code $14.50}
      */
@@ -102,6 +102,4 @@ final class ItemTableFormat {
         }
         return previousRow;
     }
-
-
 }

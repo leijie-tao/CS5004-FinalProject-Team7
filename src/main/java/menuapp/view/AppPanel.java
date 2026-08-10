@@ -96,7 +96,7 @@ protected AppPanel(AppController controller, String screenTitle) {
       notReadyLabel = new JLabel("", SwingConstants.CENTER);
     }
     notReadyLabel.setText(
-            "Not available yet: AppController." + methodName + " is not implemented");
+            "Not available yet: AppController." + methodName + " is not implemented"); // guard
     showEmptyState(true, fullView, notReadyLabel);
   }
 

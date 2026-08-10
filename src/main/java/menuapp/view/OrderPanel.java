@@ -26,51 +26,30 @@ import menuapp.model.Order;
  * {@code handleRemove}, {@code handleCheckout}
  */
 public class OrderPanel extends AppPanel {
-    /**
-     * Shows how many distinct lines the cart holds
-     */
+    /** Shows how many distinct lines the cart holds */
     private final JLabel headerLabel;
-    /**
-     * Shown in place of the table when the cart is empty.
-     */
+    /** Shown in place of the table when the cart is empty. */
     private final JLabel emptyStateLabel;
-    /**
-     * Read-only model, rebuilt wholesale on every redraw.
-     */
+    /** Read-only model, rebuilt wholesale on every redraw. */
     private final DefaultTableModel tableModel;
-    /**
-     * Shows the cart lines.
-     */
+    /** Shows the cart lines. */
     private final JTable cartTable;
-    /**
-     * Scroll container for the table, swapped out when the cart is empty.
-     */
+    /** Scroll container for the table, swapped out when the cart is empty. */
     private final JScrollPane tableScrollPane;
-    /**
-     * Lowers the selected line by one, or removes it at quantity one.
-     */
+    /** Lowers the selected line by one, or removes it at quantity one. */
     private final JButton decreaseButton;
-    /**
-     * Raises the selected line by one.
-     */
+    /** Raises the selected line by one. */
     private final JButton increaseButton;
-    /**
-     * Removes the selected line outright.
-     */
+    /** Removes the selected line outright. */
     private final JButton removeButton;
-    /**
-     * Confirms the cart.
-     */
+    /** Confirms the cart. */
     private final JButton checkoutButton;
-    /**
-     * Shows the running total.
-     */
+    /** Shows the running total. */
     private final JLabel totalLabel;
 
 
     /**
      * Creates the cart screen.
-     *
      * @param controller the shared controller
      */
     public OrderPanel(AppController controller) {
@@ -78,7 +57,8 @@ public class OrderPanel extends AppPanel {
 
         this.headerLabel = new JLabel();
         this.emptyStateLabel = new JLabel(
-                "Your cart is empty. Add something from the Menu tab.", SwingConstants.CENTER);
+                "Your cart is empty.\u263A\uFE0F Add something from our menu for checkout!",
+                SwingConstants.CENTER);
         this.tableModel = new ReadOnlyTableModel(cartColumnNames());
         this.cartTable = new JTable(tableModel);
         this.tableScrollPane = new JScrollPane(cartTable);
@@ -96,7 +76,7 @@ public class OrderPanel extends AppPanel {
 
     /**
      * Arranges the header, table, and control strip inside a border layout. The
-     * table goes into the centre slot here, which is the precondition
+     * table goes into the center slot here, which is the precondition
      * {@link AppPanel#showEmptyState} relies on to swap it out later.
      */
     private void layOutComponents() {
@@ -132,44 +112,39 @@ public class OrderPanel extends AppPanel {
      */
     private void attachListeners() {
         cartTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                                                                   @Override
-                                                                   public void valueChanged(ListSelectionEvent event) {
-                                                                       updateButtonState();
-                                                                   }
-                                                               }
-        );
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                updateButtonState();
+            }
+        });
 
         decreaseButton.addActionListener(new ActionListener() {
-                                             @Override
-                                             public void actionPerformed(ActionEvent event) {
-                                                 handleDecrease();
-                                             }
-                                         }
-        );
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                handleDecrease();
+            }
+        });
 
         increaseButton.addActionListener(new ActionListener() {
-                                             @Override
-                                             public void actionPerformed(ActionEvent event) {
-                                                 handleIncrease();
-                                             }
-                                         }
-        );
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                handleIncrease();
+            }
+        });
 
         removeButton.addActionListener(new ActionListener() {
-                                           @Override
-                                           public void actionPerformed(ActionEvent event) {
-                                               handleRemove();
-                                           }
-                                       }
-        );
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                handleRemove();
+            }
+        });
 
         checkoutButton.addActionListener(new ActionListener() {
-                                             @Override
-                                             public void actionPerformed(ActionEvent event) {
-                                                 handleCheckout();
-                                             }
-                                         }
-        );
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                handleCheckout();
+            }
+        });
     }
 
     /**
@@ -219,7 +194,6 @@ public class OrderPanel extends AppPanel {
 
     /**
      * Reinstates a row selection after the table has been rebuilt.
-     *
      * @param previousRow the row that was selected before the rebuild
      */
     private void restoreSelection(int previousRow) {
@@ -229,9 +203,7 @@ public class OrderPanel extends AppPanel {
         }
     }
 
-    /**
-     * Enables only the buttons that make sense for the current cart and selection.
-     */
+    /** Enables only the buttons that make sense for the current cart and selection. */
     private void updateButtonState() {
         boolean hasSelection = cartTable.getSelectedRow() >= 0;
         decreaseButton.setEnabled(hasSelection);
@@ -260,7 +232,7 @@ public class OrderPanel extends AppPanel {
         try {
             controller.setCartQuantity(itemName, quantity + 1);
         } catch (RuntimeException failure) {
-            showFailure("Could not change that quantity", failure);
+            showFailure("Sorry, quantity can't be changed", failure);
         }
         refresh();
     }
@@ -286,14 +258,12 @@ public class OrderPanel extends AppPanel {
                 controller.setCartQuantity(itemName, quantity - 1);
             }
         } catch (RuntimeException failure) {
-            showFailure("Could not change that quantity", failure);
+            showFailure("Sorry, quantity can't be changed", failure);
         }
         refresh();
     }
 
-    /**
-     * Removes the selected line outright, then redraws.
-     */
+    /** Removes the selected line outright, then redraws. */
     private void handleRemove() {
         String itemName = getSelectedItemName();
         if (itemName == null) {
@@ -302,7 +272,7 @@ public class OrderPanel extends AppPanel {
         try {
             controller.removeFromCart(itemName);
         } catch (RuntimeException failure) {
-            showFailure("Could not remove that item", failure);
+            showFailure("Sorry, item can't be removed", failure);
         }
         refresh();
     }
@@ -325,7 +295,7 @@ public class OrderPanel extends AppPanel {
         try {
             controller.checkout();
         } catch (RuntimeException failure) {
-            showFailure("Could not place that order", failure);
+            showFailure("\uD83D\uDE14 Sorry order can't be placed", failure); // enum list of failures for UX?
             refresh();
             return;
         }
@@ -340,14 +310,11 @@ public class OrderPanel extends AppPanel {
      */
     private static final String[] CART_COLUMN_NAMES = {"Item", "Price", "Qty", "Subtotal"};
 
-    /**
-     * Index of the item name column, the column that identifies a selected row.
-     */
+    /** Index of the item name column, the column that identifies a selected row. */
     static final int CART_NAME_COLUMN = 0;
 
     /**
      * Returns the cart column headers as a fresh copy on every call.
-     *
      * @return a new array holding the four headers
      */
     static String[] cartColumnNames() {
@@ -361,7 +328,6 @@ public class OrderPanel extends AppPanel {
      * The subtotal multiplies the unrounded price and formats the product instead of multiplying the
      * rounded display texts. An item priced at 6.601 therefore shows a unit price of $6.60
      * and a subtotal of $66.01 at quantity ten.
-     *
      * @param cart each item paired with its quantity and may be null
      * @return one row per line holding name, unit price, quantity, and subtotal
      */
@@ -397,7 +363,6 @@ public class OrderPanel extends AppPanel {
 
     /**
      * Builds the running total line beneath the table.
-     *
      * @param total the cart total in dollars
      * @return the total text, for example {@code Total: $37.00}
      */
@@ -408,7 +373,6 @@ public class OrderPanel extends AppPanel {
     /**
      * Looks through the cart for an item with a matching name and return its quantity.
      * If the cart, name or item doesn't exist,then it returns a 0 instead of causing an error.
-     *
      * @param cart each item paired with its quantity, may be null
      * @param name the item name to look for, may be null
      * @return the quantity on that line, or zero when it is not in the cart
@@ -427,8 +391,7 @@ public class OrderPanel extends AppPanel {
 
     /**
      * If the quantity is 1 or less than 1, returns true. Otherwise, remove the item from the cart instead
-     * of reducing quantity.There should be no negative or 0, and if it does occur, item is removed;.
-     *
+     * of reducing quantity.There should be no negative or 0, and if it does occur, item is removed.
      * @param currentQuantity the quantity showing on the line
      * @return true when the line should be removed
      */
@@ -440,7 +403,6 @@ public class OrderPanel extends AppPanel {
      * Figures which row should stay selected after the table refreshes by trying to keep the same row highlighted. If
      * the row no longer exists, then the last available row is selected instead. If there are no rows or nothing was
      * selected before , then it selects nothing.
-     *
      * @param previousRow the row index selected before the rebuild. Set to -1 when nothing was selected
      * @param rowCount    how many rows the table holds after the rebuild
      * @return the row index to select, or -1 to select nothing

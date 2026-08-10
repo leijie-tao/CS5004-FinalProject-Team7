@@ -80,7 +80,7 @@ public class MenuPanel extends AppPanel {
     this.emptyStateLabel = new JLabel ("No match, please try another world.", SwingConstants.CENTER);
     this.statusLabel = new JLabel();
     this.addToCartButton = new JButton("+ Add to cart"); // TODO: research if this shows up fine for macs?
-    this.addToFavoritesButton = new JButton("+ Add to favorites"); // TODO: research if this shows up fine for macs?
+    this.addToFavoritesButton = new JButton("+ Add to favorites");
     this.displayedItems = new ArrayList<MenuItem>();
 
     // Dependency chain methods that read instance fields directly
@@ -100,7 +100,7 @@ public class MenuPanel extends AppPanel {
 
     JPanel controlStrip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
     controlStrip.add(titleLabel);
-    controlStrip.add(new JLabel("Category:"));
+    controlStrip.add(new JLabel("Category: "));
     controlStrip.add(categoryCombo);
     controlStrip.add(new JLabel("Search: "));
     controlStrip.add(searchField);
@@ -122,14 +122,13 @@ public class MenuPanel extends AppPanel {
 
   /** Wires control to a controller call then drawing of layout */
   private void attachListeners() {
-    menuTable.getSelectionModel().addListSelectionListener(
-            new ListSelectionListener() {
-              @Override
-              public void valueChanged(ListSelectionEvent event) {
-                updateButtonState();
-              }
-            }
-            );
+    menuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent event) {
+        updateButtonState();
+      }
+    }
+    );
 
     categoryCombo.addActionListener(new ActionListener() {
       @Override
@@ -172,8 +171,7 @@ public class MenuPanel extends AppPanel {
     }
     );
 
-    addToFavoritesButton.addActionListener(
-            new ActionListener() {
+    addToFavoritesButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
         handleAddToFavorites();
@@ -211,6 +209,7 @@ public class MenuPanel extends AppPanel {
 
 
   // Browse by section and Default View that is laid out by section
+
   /**
    * Flattens the grouped menu into one list for the default sectioned view.
    * Iterates {@link Category#values()} rather than the map's own entries so the
@@ -235,6 +234,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Filter by Category and Category Dropdown
+
   /**
    * Builds the entries for the category dropdown.
    * Labels come from {@link ItemTableFormat#formatCategory(Category)} so the
@@ -292,6 +292,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Add to Cart
+
   /**
    * Adds the selected item to the cart, then redraws. Does nothing when no row
    * is selected. On failure the dialog is shown and the method returns without
@@ -307,7 +308,7 @@ public class MenuPanel extends AppPanel {
     try {
       controller.addToCart(selectedItem);
     } catch (RuntimeException failure) {
-      showFailure("Could not add that item to the cart", failure);
+      showFailure("Sorry, could not add that item to the cart", failure);
       return;
     }
     refresh();
@@ -315,9 +316,8 @@ public class MenuPanel extends AppPanel {
   }
 
   /**
-   * Narrows a list of items down to one category.
-   * {@code controller.search} looks across the whole menu and ignores the
-   * category.
+   * Narrows a list of items down to one category with {@code controller.search} looking across the whole
+   * menu and ignores the category.
    * @param items the items to narrow and can be null
    * @param category the category to keep or to keep everything set to null
    * @return new list with matching items
@@ -340,6 +340,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Adding to Favorites
+
   /** Adds the selected item to favorites, then redraws. */
   private void handleAddToFavorites() {
     MenuItem selectedItem = getSelectedItem();
@@ -349,7 +350,7 @@ public class MenuPanel extends AppPanel {
     try {
       controller.addToFavorites(selectedItem);
     } catch (RuntimeException failure) {
-      showFailure("Could not add that item to favorites", failure);
+      showFailure("Sorry, could not add that item to favorites", failure);
       return;
     }
     refresh();
@@ -357,6 +358,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Handler methods reachable only from inside a listener, and not called by anything else in the panel.
+
   /**
    * Clears both filters and redraws the full sectioned menu. Resetting the
    * dropdown starts its own listener, so {@link #refresh()} runs once from that

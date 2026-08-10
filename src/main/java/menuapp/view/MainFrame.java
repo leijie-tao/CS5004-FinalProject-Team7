@@ -74,14 +74,14 @@ public class MainFrame extends JFrame {
     ));
     //CUSTOMER PANELS
     TabbedRolePanel customerScreens = new TabbedRolePanel(controller);
-    customerScreens.addScreen("\u2615 Menu", new MenuPanel(controller));
+    customerScreens.addScreen("\uD83C\uDF74 Menu", new MenuPanel(controller));
     customerScreens.addScreen("\uD83D\uDED2 Cart", new OrderPanel(controller));
     customerScreens.addScreen("\u2665 Favorites", new FavoritesPanel(controller));
     addCardToLayout(cardNameFor(Role.CUSTOMER), customerScreens);
 
     //STAFF PANEL
     TabbedRolePanel staffScreens = new TabbedRolePanel(controller);
-    staffScreens.addScreen("\u270F Inventory", new InventoryPanel(controller));
+    staffScreens.addScreen("\u2705 Inventory", new InventoryPanel(controller));
     staffScreens.addScreen("\uD83D\uDCC8 Sales", new SalesChartPanel(controller));
     addCardToLayout(cardNameFor(Role.STAFF), staffScreens);
   }
