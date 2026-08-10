@@ -18,7 +18,7 @@ import menuapp.controller.AppController;
 /** First screen where the user picks customer or staff. */
 public class RoleSelectionPanel extends AppPanel {
   /** Heading over button that user reads */
-  static final String TITLE_TEXT = "Welcome!Select your role:";
+  static final String TITLE_TEXT = "Welcome! Select your role:";
   /** Text that follows role button once chosen so that user knows what their role is */
   private static final String BUTTON_PREFIX = "I'm a ";
   /** Repeat role picked by the user known via RoleSelectionListener */
@@ -94,8 +94,8 @@ public class RoleSelectionPanel extends AppPanel {
   }
 
   /**
-   * Does nothing on purpose. Lack of model here meants there's nothing to re-read.
-   * Kept method because {@code MainFrame} redraws every card shown, including this one and it can't throw.
+   * Does nothing on purpose. Lack of model here means there's nothing to re-read.
+   * Kept method because {@code MainFrame} redraws every card shown, including this one it can't throw.
    */
   @Override
   public void refresh() {
