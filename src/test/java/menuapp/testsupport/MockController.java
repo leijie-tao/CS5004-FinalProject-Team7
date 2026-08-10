@@ -61,9 +61,11 @@ MockController extends AppController {
         menuItems.add(new MenuItem("Cazuela de castañas", 29.50, Category.MAIN, null));
         menuItems.add(new MenuItem("Pečená kachna", 31.00, Category.MAIN, null));
         menuItems.add(new MenuItem("Bún Thịt Nướng", 30.135, Category.MAIN, null));
-        menuItems.add(new MenuItem("Cumin Lamb Biang-Biang Noodles", 25.5, Category.MAIN, null));
+        menuItems.add(new MenuItem("Cumin Lamb Biang-Biang Noodles", 25.5,
+                Category.MAIN, "src/main/resources/images/Cumin Lamb Biang-Biang Noodles"));
         // Dessert
-        menuItems.add(new MenuItem("Savoureux", 7.00, Category.DESSERT, null));
+        menuItems.add(new MenuItem("Savoureux", 7.00,
+                Category.DESSERT, "src/main/resources/images/savoureux.png"));
         menuItems.add(new MenuItem("Piñonates", 5.5, Category.DESSERT, null));
         menuItems.add(new MenuItem("Štrúdl", 6.601, Category.DESSERT, null));
         menuItems.add(new MenuItem("Chè Bắp", 4.5, Category.DESSERT, null));
@@ -71,7 +73,8 @@ MockController extends AppController {
         // Beverage
         menuItems.add(new MenuItem("Café au lait", 3.50, Category.BEVERAGE, null));
         menuItems.add(new MenuItem("Cortado con canela", 3.00, Category.BEVERAGE, null));
-        menuItems.add(new MenuItem("Alžírská káva", 4.56, Category.BEVERAGE, null));
+        menuItems.add(new MenuItem("Alžírská káva", 4.56,
+                Category.BEVERAGE, "src/main/resources/images/Alžírská káva.png"));
         menuItems.add(new MenuItem("Cà Phê Sữa Đá", 3.75, Category.BEVERAGE, null));
         menuItems.add(new MenuItem("Yuenyeung", 4, Category.BEVERAGE, null));
     }

@@ -8,16 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -61,6 +52,8 @@ public class MenuPanel extends AppPanel {
    * be modified in place and is not an owned state. Items are replaced in {@link #refresh()}.
    */
   private List<MenuItem> displayedItems;
+  /** Shows the selected item's picture, or a line of text when there is none. */
+  private final JLabel imagePreviewLabel;
 
 
   /**
@@ -82,6 +75,7 @@ public class MenuPanel extends AppPanel {
     this.addToCartButton = new JButton("+ Add to cart"); // TODO: research if this shows up fine for macs?
     this.addToFavoritesButton = new JButton("+ Add to favorites");
     this.displayedItems = new ArrayList<MenuItem>();
+    this.imagePreviewLabel = new JLabel("", SwingConstants.CENTER);
 
     // Dependency chain methods that read instance fields directly
     // Do not reorder!
@@ -113,11 +107,46 @@ public class MenuPanel extends AppPanel {
     menuTable.getTableHeader().setReorderingAllowed(false);
     add(tableScrollPane, BorderLayout.CENTER);
 
+    // image added to the table
+    imagePreviewLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
+    imagePreviewLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+    imagePreviewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    add(imagePreviewLabel, BorderLayout.EAST);
+
     JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
     actionRow.add(addToCartButton);
     actionRow.add(addToFavoritesButton);
     actionRow.add(statusLabel);
     add(actionRow, BorderLayout.SOUTH);
+  }
+
+  // private helper for rendering images
+  /** Shows the selected item's picture, or explain if none. Runs the same on all panels, so preview doesn't change. */
+  private void updateImagePreview() {
+    MenuItem selectedItem = getSelectedItem();
+    ImageIcon preview = (selectedItem == null)
+            ? null
+            : ItemTableFormat.loadPreview(selectedItem.getImagePath());
+    imagePreviewLabel.setIcon(preview);
+    imagePreviewLabel.setText(previewTextFor(selectedItem, preview != null));
+  }
+
+  /**
+   * Builds the caption beside the preview. An item with a picture needs no
+   * caption, because the picture is the message.
+   *
+   * @param item the selected item, or null when nothing is selected
+   * @param hasImage true when an icon was loaded for that item
+   * @return the caption text, empty when the picture speaks for itself
+   */
+  static String previewTextFor(MenuItem item, boolean hasImage) {
+    if (item == null) {
+      return "Select an item to preview it";
+    }
+    if (!hasImage) {
+      return "No picture for " + item.getName();
+    }
+    return "";
   }
 
   /** Wires control to a controller call then drawing of layout */
@@ -376,6 +405,7 @@ public class MenuPanel extends AppPanel {
     boolean hasSelection = menuTable.getSelectedRow() >= 0;
     addToCartButton.setEnabled(hasSelection);
     addToFavoritesButton.setEnabled(hasSelection);
+    updateImagePreview();
   }
 
   /**

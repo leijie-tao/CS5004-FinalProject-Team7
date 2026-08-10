@@ -27,6 +27,18 @@ public class MenuPanelTest {
     }
 
     /**
+     * Builds a menu item that carries an image path, for the preview caption tests. The path is only passed through.
+     * @param name the item name
+     * @param price the item price
+     * @param category the item category
+     * @param imagePath the classpath location of the picture
+     * @return a new menu item with an image path
+     */
+    private MenuItem itemWithImage(String name, double price, Category category, String imagePath) {
+        return new MenuItem(name, price, category, imagePath);
+    }
+
+    /**
      * A grouped menu holding two mains, one dessert, and no beverages. The
      * beverage key is absent rather than mapped to an empty list, which is what a
      * real grouping is likely to hand back.
@@ -236,5 +248,26 @@ public class MenuPanelTest {
     public void buildStatusTextTrimsTheKeyword() {
         assertEquals("0 matches for \"tart\"",
                 MenuPanel.buildStatusText(0, "  tart  ", null));
+    }
+    // Image preview caption
+    /** Nothing selected prompts the user to pick something. */
+    @Test
+    public void previewTextForNoSelectionPrompts() {
+        assertEquals("Select an item to preview it",
+                MenuPanel.previewTextFor(null, false));
+    }
+
+    /** An item with no picture is named, so the user knows the preview is current. */
+    @Test
+    public void previewTextForItemWithoutImageNamesIt() {
+        assertEquals("No picture for Tiramisu",
+                MenuPanel.previewTextFor(item("Tiramisu", 8.0, Category.DESSERT), false));
+    }
+
+    /** A picture needs no caption. */
+    @Test
+    public void previewTextForItemWithImageIsEmpty() {
+        assertEquals("", MenuPanel.previewTextFor(
+                itemWithImage("Savoureux", 7.0, Category.DESSERT, "/images/savoureux.png"), true));
     }
 }

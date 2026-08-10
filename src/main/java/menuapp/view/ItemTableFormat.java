@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Locale;
 import menuapp.model.Category;
 import menuapp.model.MenuItem;
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
 
 /**
  * Shared display formatting for every panel that shows menu item objects in a table. {@code FavoritesPanel}
@@ -15,7 +18,12 @@ final class ItemTableFormat {
     private static final String[] COLUMN_NAMES = {"Item", "Category", "Price"};
     /** Index of the item name column, the column that identifies a selected row. */
     static final int NAME_COLUMN = 0;
-    /** Prevents instantiation; this class is a holder for static helpers only. */
+    /** Width every preview is scaled to */
+    static final int PREVIEW_WIDTH = 160;
+    /** Height every preview is scaled to. */
+    static final int PREVIEW_HEIGHT = 120;
+
+    /** Prevents instantiation; this is a holder for static helpers only. */
     private ItemTableFormat() {
         throw new AssertionError("ItemTableFormat is not meant to be instantiated");
     }
@@ -77,7 +85,7 @@ final class ItemTableFormat {
      * Formats a price for display with two decimal places.
      * {@link Locale#US} is passed so the separator is a dot on every machine.
      * Without it the same code prints {@code $14,50} under a European default locale.
-     * TODO: Note to me, come back here later--maybe I can do an enum for setting lcoale?
+     * TODO: Note to me, come back here later--maybe I can do an enum for setting locale?
      * @param price the price in dollars
      * @return the price as text, for example {@code $14.50}
      */
@@ -102,4 +110,31 @@ final class ItemTableFormat {
         }
         return previousRow;
     }
+
+    /**
+     * Finds an item's picture in the project's files and shrinks it down to the small size used for previews.
+     * Three things can go wrong: the item might have no picture name saved, the name might point to a file
+     * that isn't there, or the file might be there but unreadable (corrupted, or not really an image).
+     * Whatever code called this then shows the item's name as plain text.
+     * @param imagePath where to look for the picture file; may be null or empty
+     * @return the scaled picture, or null if there was nothing to show
+     */
+    static ImageIcon loadPreview(String imagePath) {
+        if (imagePath == null || imagePath.trim().isEmpty()) {
+            return null;
+        }
+        URL location = ItemTableFormat.class.getResource(imagePath.trim());
+        if (location == null) {
+            System.out.println("loadPreview: not on classpath -> " + imagePath.trim()); // TODO: Debugging images
+            return null;
+        }
+        ImageIcon original = new ImageIcon(location);
+        if (original.getIconWidth() <= 0) {
+            return null;
+        }
+        Image scaled = original.getImage().getScaledInstance(
+                PREVIEW_WIDTH, PREVIEW_HEIGHT, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled);
+    }
+
 }

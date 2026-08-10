@@ -1,13 +1,12 @@
 package menuapp.view;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-
 import java.util.ArrayList;
 import java.util.List;
 import menuapp.model.Category;
 import menuapp.model.MenuItem;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the shared formatting that both {@code FavoritesPanel} and {@code MenuPanel} render through.
@@ -139,5 +138,24 @@ public class ItemTableFormatTest {
     @Test
     public void clampSelectionKeepsAnAbsentSelectionAbsent() {
         assertEquals(-1, ItemTableFormat.clampSelection(-1, 4));
+    }
+
+    // Image preview
+    /** No path means no picture. */
+    @Test
+    public void loadPreviewHandlesNull() {
+        assertNull(ItemTableFormat.loadPreview(null));
+    }
+
+    /** Whitespace is treated the same as no path at all. */
+    @Test
+    public void loadPreviewHandlesBlank() {
+        assertNull(ItemTableFormat.loadPreview("   "));
+    }
+
+    /** A path that resolves to nothing returns null rather than throwing. */
+    @Test
+    public void loadPreviewHandlesMissingResource() {
+        assertNull(ItemTableFormat.loadPreview("/images/does-not-exist.png"));
     }
 }

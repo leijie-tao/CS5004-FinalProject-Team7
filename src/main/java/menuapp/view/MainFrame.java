@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
    * @param controller the shared controller
    */
   public MainFrame(AppController controller) {
-    super("Restaurant Menu");
+    super("NEU Café Menu");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize(900, 600);
     setLocationRelativeTo(null);
