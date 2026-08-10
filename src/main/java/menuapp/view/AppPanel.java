@@ -1,4 +1,5 @@
 package menuapp.view;
+
 import menuapp.controller.AppController;
 
 import javax.swing.JOptionPane;
@@ -8,96 +9,117 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-
-/** Shared base for every screen. Holds the controller and the redraw contract.
- *  Note: AppPanel was decided to be just a class rather than interface like {@link RoleSelectionListener} since every screen comes from JPanel, an no screen
- *  has its inheritance slot spent and later get blocked. The subclass inherits the controller field which an interface
- *  couldn't do.
- * Note: Extract interface if a caller outside this menuapp package needs to hand a screen to {@code TabbedRolePanel}.
+/**
+ * Shared base for every screen. Holds the controller and the redraw contract.
+ * Note: AppPanel is a class rather than an interface like {@link RoleSelectionListener}, because every screen
+ * already comes from JPanel, so no screen has its single inheritance slot spent and later gets blocked. The
+ * subclass also inherits the controller field, which an interface could not give it.
+ * Note: extract an interface if a caller outside this package needs to hand a screen to {@code TabbedRolePanel}.
  */
 public abstract class AppPanel extends JPanel {
-  /** The controller every panel talks to. */
-  protected final AppController controller;
-  /** Title text located in the error dialog screen */
-  private final String screenTitle;
-  /** Shows which center component is currently installed with false meaning full view is currently occupying. This is
-   * also the state that everysubclass lays out unto.
-   */
-  private boolean showingEmptyState;
-  /** Shown when controller method that a screen needs still throws.
-   * Sole purpose is for ease of indentifying during integration.
-   */
-  private JLabel notReadyLabel;
+    /** The controller every panel talks to. */
+    protected final AppController controller;
+    /** Title text shown on this screen's dialogs. */
+    private final String screenTitle;
+    /** The component currently occupying the center slot, or null before anything is installed. */
+    private Component installedCenter;
+    /**
+     * Shown when a controller method a screen needs still throws. Sole purpose is ease of
+     * identifying unfinished wiring during integration.
+     */
+    private JLabel notReadyLabel;
 
-  /** Stores controller for a screen that never raises an error dialog.
-   * @param controller shared controller
-   */
-  protected AppPanel(AppController controller) {
-    this(controller, "Restaurant Menu");
-  }
-
-  /**
-   * Stores controller and the title screen as well as any error flags raised.
-   * @param controller shared controller
-   * @param screenTitle title shown on screen
-   */
-protected AppPanel(AppController controller, String screenTitle) {
-  this.controller = controller;
-  this.screenTitle = screenTitle;
-}
-
-  /** Redraws this panel from the current model state. */
-  public abstract void refresh();
-
-  /**
-   * Switches between normal view and empty state view. If the requested view is already showing, then nothing changes.
-   * After switching the panel is then told to repaint itself so that the correct view appears on screen.
-   * @param isEmpty   true when empty state should be shown
-   * @param fullView  normal view to show when content is available
-   * @param emptyView view to show when there is no content
-   */
-  protected final void showEmptyState(boolean isEmpty, Component fullView, Component emptyView) {
-    if (isEmpty == showingEmptyState) {
-      return;
+    /**
+     * Stores the controller for a screen that never raises an error dialog.
+     *
+     * @param controller shared controller
+     */
+    protected AppPanel(AppController controller) {
+        this(controller, "Restaurant Menu");
     }
-    if (isEmpty) {
-      remove(fullView);
-      add(emptyView, BorderLayout.CENTER);
-    } else {
-      remove(emptyView);
-      add(fullView, BorderLayout.CENTER);
+
+    /**
+     * Stores the controller and the title this screen's dialogs carry.
+     *
+     * @param controller  shared controller
+     * @param screenTitle title shown on this screen's dialogs
+     */
+    protected AppPanel(AppController controller, String screenTitle) {
+        this.controller = controller;
+        this.screenTitle = screenTitle;
     }
-    showingEmptyState = isEmpty;
-    revalidate();
-    repaint();
-  }
 
-  /**
-   * Reports failed controller call to the user, with the controller in every persistence failure at run time.
-   * @param summary description of what failed
-   * @param failure exception that caused the failure
-   */
-  protected final void showFailure(String summary, RuntimeException failure) {
-    JOptionPane.showMessageDialog(
-            this, summary + ".\n" + failure.getMessage(), screenTitle, JOptionPane.ERROR_MESSAGE
-    );
-  }
+    /** Redraws this panel from the current model state. */
+    public abstract void refresh();
 
-  /**
-   * Shows a message when a controller method is not available yet. The message names the missing method and then it
-   * replaces the normal view with the not-ready state until the feature is implemented. Purpose is to assist with
-   * integration/wiring. Since this method is not called explicitly by any panel, a try/block behavior implemented in
-   * OrderPanel,MenuPanel, and FavoritePanel's {@code refresh()} for reachability
-   * @param fullView normal view to hide while the feature is unavailable.
-   * @param methodName controller method not implemented
-   */
-  protected final void showNotReady(Component fullView, String methodName) {
-    if(notReadyLabel == null) {
-      notReadyLabel = new JLabel("", SwingConstants.CENTER);
+    /**
+     * Installs the component this panel starts out showing. Every subclass calls this from its own
+     * layout method instead of adding to {@code BorderLayout.CENTER} directly, so the base class knows
+     * what it is later being asked to swap out.
+     *
+     * @param view the component the panel starts out showing
+     */
+    protected final void setCenter(Component view) {
+        showInCenter(view);
     }
-    notReadyLabel.setText(
-            "Not available yet: AppController." + methodName + " is not implemented"); // guard
-    showEmptyState(true, fullView, notReadyLabel);
-  }
 
+    /**
+     * Chooses between the normal view and the empty state view. Both are handed in so that neither the
+     * caller nor this class has to remember which one is currently installed.
+     *
+     * @param isEmpty   true when the empty state should be shown
+     * @param fullView  normal view to show when content is available
+     * @param emptyView view to show when there is no content
+     */
+    protected final void showEmptyState(boolean isEmpty, Component fullView, Component emptyView) {
+        showInCenter(isEmpty ? emptyView : fullView);
+    }
+
+    /**
+     * Installs one component in the center slot and removing previous state. Reference identity is the
+     * test, so asking for the component already showing costs nothing and a redraw does not flicker.
+     * This is the only method that touches the center slot, which is why the panel can never end up
+     * holding two components there at once.
+     * @param wanted the component that should occupy the center slot
+     */
+    private void showInCenter(Component wanted) {
+        if (wanted == installedCenter) {
+            return;
+        }
+        if (installedCenter != null) {
+            remove(installedCenter);
+        }
+        add(wanted, BorderLayout.CENTER);
+        installedCenter = wanted;
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * Reports a failed controller call to the user. Panels call this when a controller method throws at
+     * run time, for example when a save or load fails.
+     *
+     * @param summary description of what failed
+     * @param failure the exception that caused the failure
+     */
+    protected final void showFailure(String summary, RuntimeException failure) {
+        JOptionPane.showMessageDialog(
+                this, summary + ".\n" + failure.getMessage(), screenTitle, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Shows a message when a controller method is not available yet, naming the missing method and
+     * replacing the normal view until the feature is implemented. This exists to assist with wiring, and
+     * is reached from the try block each panel's {@code refresh()} wraps around its controller calls.
+     *
+     * @param methodName the controller method that is not implemented
+     */
+    protected final void showNotReady(String methodName) {
+        if (notReadyLabel == null) {
+            notReadyLabel = new JLabel("", SwingConstants.CENTER);
+        }
+        notReadyLabel.setText(
+                "Not available yet: AppController." + methodName + " is not implemented");
+        showInCenter(notReadyLabel);
+    }
 }

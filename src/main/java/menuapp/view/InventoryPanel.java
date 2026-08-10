@@ -131,7 +131,7 @@ public class InventoryPanel extends AppPanel {
 
         contentPanel.add(stockScrollPane);
         contentPanel.add(buildLowStockSide());
-        add(contentPanel, BorderLayout.CENTER);
+        setCenter(contentPanel);
 
         JPanel restockStrip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         restockStrip.add(new JLabel("Enter Restock amount:"));
@@ -238,7 +238,7 @@ public class InventoryPanel extends AppPanel {
             Inventory inventory = controller.getInventory();
             stock = (inventory == null) ? null : inventory.getAllStock();
         } catch (UnsupportedOperationException notBuiltYet) {
-            showNotReady(contentPanel, "getInventory"); // guard in case implmentation hits a block
+            showNotReady("getInventory"); // guard in case implmentation hits a block
             return;
         }
 
@@ -246,7 +246,7 @@ public class InventoryPanel extends AppPanel {
         try {
             lowStockNames = controller.getLowStockItems(activeThreshold);
         } catch (UnsupportedOperationException notBuiltYet) {
-            showNotReady(contentPanel, "getLowStockItems"); // guard in case implmentation hits a block
+            showNotReady("getLowStockItems"); // guard in case implmentation hits a block
             return;
         }
 

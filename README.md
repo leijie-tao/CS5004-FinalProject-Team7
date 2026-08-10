@@ -33,24 +33,33 @@ items, empty orders, threshold boundaries, and defensive copies.
 ### GUI Components (View - L Boco)
 ```mermaid
 flowchart TB
-    subgraph frame["MainFrame (JFrame)"]
-        role["Role selection<br/>two buttons"]
+    subgraph frame["MainFrame (JFrame)<br/>CardLayout, one card visible at a time"]
+        role["RoleSelectionPanel"]
 
-        subgraph cust["Customer tabs (TabbedRolePanel)"]
-            menu["Menu panel"]
-            order["Order panel"]
-            fav["Favorites panel"]
+        subgraph cust["TabbedRolePanel — Customer"]
+            menu["MenuPanel"]
+            order["OrderPanel"]
+            fav["FavoritesPanel"]
         end
 
-        subgraph staff["Staff tabs (TabbedRolePanel)"]
-            inv["Inventory panel"]
-            sales["Sales chart panel"]
+        subgraph staff["TabbedRolePanel — Staff"]
+            inv["InventoryPanel"]
+            sales["SalesChartPanel"]
         end
 
         switch["Switch role button"]
     end
 
-    controller["AppController<br/>Called by every panel"] --> frame
+    base["AppPanel (abstract)<br/>holds the controller<br/>declares refresh()<br/><i>every shaded box extends this</i>"]
+    controller["AppController"]
+
+    frame -. "showCard() calls refresh()<br/>through an AppPanel reference" .-> base
+    base --> controller
+
+    classDef screen fill:#dbeafe,stroke:#2563eb
+    class role,menu,order,fav,inv,sales screen
+    style cust fill:#dbeafe,stroke:#2563eb
+    style staff fill:#dbeafe,stroke:#2563eb
 ```
 The GUI (or View) is compromised of three parts, each with their own specific classes. The overarching component of
 the GUI is the MainFrame(JFrame) where only one card is visible at a time. There is technical 4th part, AppPanel, since

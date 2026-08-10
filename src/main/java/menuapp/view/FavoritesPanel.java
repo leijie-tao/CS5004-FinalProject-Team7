@@ -34,7 +34,7 @@ import menuapp.model.MenuItem;
  */
 public class FavoritesPanel extends AppPanel {
     /** Column headers for the favorites table. */
-    private static final String[] COLUMN_NAMES = {"Item", "Category", "Price"};
+    private static final String[] COLUMN_NAMES = ItemTableFormat.columnNames();
     /** Index of the item-name column to identify a selected row. */
     private static final int NAME_COLUMN = 0;
     /** Shows the list label and how many items it holds. */
@@ -55,8 +55,7 @@ public class FavoritesPanel extends AppPanel {
     private final JButton saveButton;
     /** Reads list back from the chosen file. */
     private final JButton loadButton;
-    /** Tracks which component currently in the center slot and starts false. */
-    private boolean showingEmptyState; // only mutable widget
+
 
     /**
      * Builds the favorites screen from current model state.
@@ -93,7 +92,7 @@ public class FavoritesPanel extends AppPanel {
         favoritesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         favoritesTable.setRowHeight(24);
         favoritesTable.getTableHeader().setReorderingAllowed(false);
-        add(tableScrollPane, BorderLayout.CENTER);
+        setCenter(tableScrollPane);
 
         JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         buttonRow.add(removeButton);
@@ -162,7 +161,7 @@ public class FavoritesPanel extends AppPanel {
         try {
             currentFavorites = controller.getFavorites();
         } catch (UnsupportedOperationException notBuiltYet) {
-            showNotReady(tableScrollPane, "getFavorites");
+            showNotReady("getFavorites");
             return;
         }
 
@@ -223,27 +222,6 @@ public class FavoritesPanel extends AppPanel {
         }
 
         return safeName + " (" + itemCount + " " + unit + ")";
-    }
-
-    /**
-     * Swaps the table for a prompt when nothing is shown.
-     * @param isEmpty true when the list holds no items
-     */
-    private void showEmptyState(boolean isEmpty) {
-        if (isEmpty == showingEmptyState) {
-            return;
-        }
-        if (isEmpty) {
-            remove(tableScrollPane);
-            add(emptyStateLabel, BorderLayout.CENTER);
-        } else {
-            remove(emptyStateLabel);
-            add(tableScrollPane, BorderLayout.CENTER);
-        }
-        showingEmptyState = isEmpty;
-
-        revalidate();
-        repaint();
     }
 
     /** Enables only the buttons that make sense for the current selection.

@@ -59,7 +59,7 @@ public class SalesChartPanel extends AppPanel {
         headerLabel.setFont(headerLabel.getFont().deriveFont(Font.BOLD, 16f));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         add(headerLabel, BorderLayout.NORTH);
-        add(chartPanel, BorderLayout.CENTER);
+        add(chartPanel);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SalesChartPanel extends AppPanel {
         try {
             revenue = controller.getRevenueByCategory();
         } catch (UnsupportedOperationException notBuiltYet) {
-            showNotReady(chartPanel, "getRevenueByCategory");
+            showNotReady("getRevenueByCategory");
             return;
         }
 

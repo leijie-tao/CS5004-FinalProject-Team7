@@ -74,11 +74,7 @@ public class OrderPanel extends AppPanel {
         refresh();
     }
 
-    /**
-     * Arranges the header, table, and control strip inside a border layout. The
-     * table goes into the center slot here, which is the precondition
-     * {@link AppPanel#showEmptyState} relies on to swap it out later.
-     */
+    /** Puts the header at the top and hands the chart to the base class as the panel's center component. */
     private void layOutComponents() {
         setLayout(new BorderLayout(0, 8));
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -90,7 +86,7 @@ public class OrderPanel extends AppPanel {
         cartTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cartTable.setRowHeight(24);
         cartTable.getTableHeader().setReorderingAllowed(false);
-        add(tableScrollPane, BorderLayout.CENTER);
+        setCenter(tableScrollPane);
 
         totalLabel.setFont(totalLabel.getFont().deriveFont(Font.BOLD, 14f));
 
@@ -161,7 +157,7 @@ public class OrderPanel extends AppPanel {
         try {
             currentCart = controller.getCart();
         } catch (UnsupportedOperationException notBuiltYet) {
-            showNotReady(tableScrollPane, "getCart");
+            showNotReady("getCart");
             return;
         }
         Map<MenuItem, Integer> lines = currentCart.getItemsWithQuantities();

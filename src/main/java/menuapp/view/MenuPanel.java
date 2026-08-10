@@ -54,6 +54,8 @@ public class MenuPanel extends AppPanel {
   private List<MenuItem> displayedItems;
   /** Shows the selected item's picture, or a line of text when there is none. */
   private final JLabel imagePreviewLabel;
+  /** Names the controller method that {@link #resolveItems} found unimplemented */
+  private String unavailableMethod;
 
 
   /**
@@ -105,7 +107,7 @@ public class MenuPanel extends AppPanel {
     menuTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     menuTable.setRowHeight(24);
     menuTable.getTableHeader().setReorderingAllowed(false);
-    add(tableScrollPane, BorderLayout.CENTER);
+    setCenter(tableScrollPane);
 
     // image added to the table
     imagePreviewLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
@@ -221,10 +223,9 @@ public class MenuPanel extends AppPanel {
     Category category = categoryFromLabel(selectedCategoryLabel());
 
     // guard block
-    List<MenuItem> items;
-    try { items = resolveItems(keyword, category);
-    } catch (UnsupportedOperationException notBuiltYet) {
-      showNotReady(tableScrollPane, "getGroupedMenu");
+    List<MenuItem> items = resolveItems(keyword, category);
+    if (items == null) {
+      showNotReady(unavailableMethod);
       return;
     }
     displayedItems = items;
@@ -457,14 +458,38 @@ public class MenuPanel extends AppPanel {
    * @return the items to display, never null
    */
   private List<MenuItem> resolveItems(String keyword, Category category) {
+    unavailableMethod = null;
     List<MenuItem> items;
-    if (isSearching(keyword)) {
-      items = narrowToCategory(controller.search(keyword.trim()), category);
-    } else if (category != null) {
-      items = controller.filterByCategory(category);
-    } else {
-      items = flattenGrouped(controller.getGroupedMenu());
+    try {
+      if (isSearching(keyword)) {
+        items = narrowToCategory(controller.search(keyword.trim()), category);
+      } else if (category != null) {
+        items = controller.filterByCategory(category);
+      } else {
+        items = flattenGrouped(controller.getGroupedMenu());
+      }
+    } catch (UnsupportedOperationException notBuiltYet) {
+      unavailableMethod = methodNameFor(keyword, category);
+      return null;
     }
     return (items == null) ? new ArrayList<MenuItem>() : items;
   }
+
+  /**
+   * * Returns the name of the controller method used for the current filters. A search keyword uses search,
+   * a selected category uses filterByCategory, and no filters uses getGroupedMenu.
+   * @param keyword the current search keyword, which may be null or blank
+   * @param category the selected category, or null if none is selected
+   * @return the name of the controller method to use
+   */
+  static String methodNameFor(String keyword, Category category) {
+    if (isSearching(keyword)) {
+      return "search";
+    }
+    if (category != null) {
+      return "filterByCategory";
+    }
+    return "getGroupedMenu";
+  }
+
 }

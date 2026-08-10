@@ -17,7 +17,6 @@ final class ItemTableFormat {
     /** Column headers shared by every item table. */
     private static final String[] COLUMN_NAMES = {"Item", "Category", "Price"};
     /** Index of the item name column, the column that identifies a selected row. */
-    static final int NAME_COLUMN = 0;
     /** Width every preview is scaled to */
     static final int PREVIEW_WIDTH = 160;
     /** Height every preview is scaled to. */
