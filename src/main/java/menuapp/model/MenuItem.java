@@ -1,5 +1,8 @@
 package menuapp.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /** One item on the menu. A single class, distinguished only by its category. */
 public class MenuItem {
 
@@ -16,7 +19,12 @@ public class MenuItem {
    * @param category the section this item is grouped under
    * @param imagePath path to the item image, or null when there is none
    */
-  public MenuItem(String name, double price, Category category, String imagePath) {
+  @JsonCreator
+  public MenuItem(
+      @JsonProperty("name") String name,
+      @JsonProperty("price") double price,
+      @JsonProperty("category") Category category,
+      @JsonProperty("imagePath") String imagePath) {
     this.name = name;
     this.price = price;
     this.category = category;
