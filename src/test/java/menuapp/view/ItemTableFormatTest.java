@@ -1,19 +1,17 @@
 package menuapp.view;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-
 import java.util.ArrayList;
 import java.util.List;
 import menuapp.model.Category;
 import menuapp.model.MenuItem;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * Tests the shared formatting that both {@code FavoritesPanel} and
- * {@code MenuPanel} render through. {@code FavoritesPanelTest} already covers
- * the same behaviour through its own panel; these cases pin it at the source so
- * a change made for one panel cannot quietly break the other.
+ * Tests the shared formatting that both {@code FavoritesPanel} and {@code MenuPanel} render through.
+ * {@code FavoritesPanelTest} already covers the same behavior through its own panel;
+ * these cases pin it at the source so a change made for one panel cannot quietly break the other.
  */
 public class ItemTableFormatTest {
 
@@ -110,5 +108,54 @@ public class ItemTableFormatTest {
     public void formatEnumNameHandlesNullAndEmpty() {
         assertEquals("", ItemTableFormat.formatEnumName(null));
         assertEquals("", ItemTableFormat.formatEnumName(""));
+    }
+
+    /** A selection still inside the table survives the rebuild unchanged. */
+    @Test
+    public void clampSelectionKeepsAValidRow() {
+        assertEquals(1, ItemTableFormat.clampSelection(1, 3));
+        assertEquals(0, ItemTableFormat.clampSelection(0, 3));
+    }
+
+    /**
+     * Removing the last line leaves the old index past the end. Selection falls back to the
+     * new last row instead of vanishing.
+     */
+    @Test
+    public void clampSelectionFallsBackToTheLastRow() {
+        assertEquals(1, ItemTableFormat.clampSelection(2, 2));
+        assertEquals(0, ItemTableFormat.clampSelection(5, 1));
+    }
+
+    /** An empty table can select nothing. */
+    @Test
+    public void clampSelectionReturnsNothingForAnEmptyTable() {
+        assertEquals(-1, ItemTableFormat.clampSelection(0, 0));
+        assertEquals(-1, ItemTableFormat.clampSelection(-1, 0));
+    }
+
+    /** No prior selection stays no selection. */
+    @Test
+    public void clampSelectionKeepsAnAbsentSelectionAbsent() {
+        assertEquals(-1, ItemTableFormat.clampSelection(-1, 4));
+    }
+
+    // Image preview
+    /** No path means no picture. */
+    @Test
+    public void loadPreviewHandlesNull() {
+        assertNull(ItemTableFormat.loadPreview(null));
+    }
+
+    /** Whitespace is treated the same as no path at all. */
+    @Test
+    public void loadPreviewHandlesBlank() {
+        assertNull(ItemTableFormat.loadPreview("   "));
+    }
+
+    /** A path that resolves to nothing returns null rather than throwing. */
+    @Test
+    public void loadPreviewHandlesMissingResource() {
+        assertNull(ItemTableFormat.loadPreview("/images/does-not-exist.png"));
     }
 }

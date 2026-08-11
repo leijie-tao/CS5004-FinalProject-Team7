@@ -5,17 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import menuapp.controller.AppController;
 import org.junit.jupiter.api.Test;
 
-/** Tests navigation design that a screen is redrawn when it becomes visible, and only then. */
+/**
+ * Tests navigation design that a screen is redrawn when it becomes visible, and only then.
+ */
 public class TabbedRolePanelTest {
 
-    /** A screen that counts how many times it was redrawn. */
+    /**
+     * A screen that counts how many times it was redrawn.
+     */
     private static final class RecordingScreen extends AppPanel {
 
-        /** How many times {@code refresh} has been called. */
+        /**
+         * How many times {@code refresh} has been called.
+         */
         private int refreshCount;
 
         /**
          * Builds a screen attached to no controller.
+         *
          * @param controller always null in these tests
          */
         private RecordingScreen(AppController controller) {
@@ -30,7 +37,8 @@ public class TabbedRolePanelTest {
 
     /**
      * Builds a tabbed panel holding the two screens handed in.
-     * @param first the screen under the first tab
+     *
+     * @param first  the screen under the first tab
      * @param second the screen under the second tab
      * @return the panel under test
      */
@@ -41,7 +49,9 @@ public class TabbedRolePanelTest {
         return tabs;
     }
 
-    /** Both screens end up behind the tabs. */
+    /**
+     * Both screens end up behind the tabs.
+     */
     @Test
     public void everyScreenIsAdded() {
         RecordingScreen first = new RecordingScreen(null);
@@ -62,7 +72,9 @@ public class TabbedRolePanelTest {
         assertEquals(0, second.refreshCount);
     }
 
-    /** Refreshing the container redraws the visible screen and nothing else. */
+    /**
+     * Refreshing the container redraws the visible screen and nothing else.
+     */
     @Test
     public void refreshReachesOnlyTheVisibleScreen() {
         RecordingScreen first = new RecordingScreen(null);
@@ -76,7 +88,9 @@ public class TabbedRolePanelTest {
         assertEquals(0, second.refreshCount);
     }
 
-    /** Switching tabs redraws the screen the user just moved to. */
+    /**
+     * Switching tabs redraws the screen the user just moved to.
+     */
     @Test
     public void switchingTabsRedrawsTheNewScreen() {
         RecordingScreen first = new RecordingScreen(null);
@@ -90,7 +104,9 @@ public class TabbedRolePanelTest {
         assertEquals(firstBefore, first.refreshCount);
     }
 
-    /** Coming back to a screen redraws it again rather than trusting the old paint. */
+    /**
+     * Coming back to a screen redraws it again rather than trusting the old paint.
+     */
     @Test
     public void returningToAScreenRedrawsItAgain() {
         RecordingScreen first = new RecordingScreen(null);
@@ -105,7 +121,9 @@ public class TabbedRolePanelTest {
         assertEquals(1, second.refreshCount);
     }
 
-    /** An empty container refreshes without blowing up on a missing selection. */
+    /**
+     * An empty container refreshes without blowing up on a missing selection.
+     */
     @Test
     public void refreshOnAnEmptyContainerIsSafe() {
         new TabbedRolePanel(null).refresh();

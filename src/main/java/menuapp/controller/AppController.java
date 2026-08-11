@@ -2,6 +2,7 @@ package menuapp.controller;
 
 import java.util.List;
 import java.util.Map;
+
 import menuapp.model.Category;
 import menuapp.model.FavoritesList;
 import menuapp.model.Inventory;
@@ -40,7 +41,7 @@ public class AppController {
 
   /** @return every item grouped by category, for the menu view */
   public Map<Category, List<MenuItem>> getGroupedMenu() {
-    throw new UnsupportedOperationException("TODO");
+    return menu.groupByCategory();
   }
 
   /**
@@ -50,7 +51,7 @@ public class AppController {
    * @return the matching items
    */
   public List<MenuItem> search(String keyword) {
-    throw new UnsupportedOperationException("TODO");
+    return menu.search(keyword);
   }
 
   /**
@@ -59,7 +60,7 @@ public class AppController {
    * @param item the item to add
    */
   public void addToCart(MenuItem item) {
-    throw new UnsupportedOperationException("TODO");
+    cart.add(item);
   }
 
   /**
@@ -68,7 +69,7 @@ public class AppController {
    * @param name the name of the item to remove
    */
   public void removeFromCart(String name) {
-    throw new UnsupportedOperationException("TODO");
+    cart.remove(name);
   }
 
   /**
@@ -78,12 +79,12 @@ public class AppController {
    * @param quantity the new quantity
    */
   public void setCartQuantity(String name, int quantity) {
-    throw new UnsupportedOperationException("TODO");
+    cart.setQuantity(name, quantity);
   }
 
   /** @return the current cart */
   public Order getCart() {
-    throw new UnsupportedOperationException("TODO");
+    return cart;
   }
 
   /**
@@ -91,7 +92,11 @@ public class AppController {
    * sale, then clears the cart.
    */
   public void checkout() {
-    throw new UnsupportedOperationException("TODO");
+    for (Map.Entry<MenuItem, Integer> entry : cart.getItemsWithQuantities().entrySet()) {
+      inventory.decrease(entry.getKey().getName(), entry.getValue());
+    }
+    inventory.recordSale(cart);
+    cart.clear();
   }
 
   /**
@@ -100,7 +105,7 @@ public class AppController {
    * @param item the item to add
    */
   public void addToFavorites(MenuItem item) {
-    throw new UnsupportedOperationException("TODO");
+    favorites.add(item);
   }
 
   /**
@@ -111,12 +116,12 @@ public class AppController {
    * @return the items in that category
    */
   public List<MenuItem> filterByCategory(Category category) {
-    throw new UnsupportedOperationException("TODO");
+    return menu.itemsInCategory(category);
   }
 
   /** @return the current favorites list */
   public FavoritesList getFavorites() {
-    throw new UnsupportedOperationException("TODO");
+    return favorites;
   }
 
   /**
@@ -125,7 +130,7 @@ public class AppController {
    * @param filePath where to write it
    */
   public void saveFavorites(String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    fileHandler.save(favorites, filePath);
   }
 
   /**
@@ -134,7 +139,7 @@ public class AppController {
    * @param filePath the file to read
    */
   public void loadFavorites(String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    favorites = fileHandler.load(filePath, FavoritesList.class);
   }
 
   /**
@@ -144,12 +149,12 @@ public class AppController {
    * @param amount how many units to add
    */
   public void restock(String itemName, int amount) {
-    throw new UnsupportedOperationException("TODO");
+    inventory.increase(itemName, amount);
   }
 
   /** @return the inventory, for the staff view */
   public Inventory getInventory() {
-    throw new UnsupportedOperationException("TODO");
+    return inventory;
   }
 
   /**
@@ -160,7 +165,7 @@ public class AppController {
    * @return the names of low stock items
    */
   public List<String> getLowStockItems(int threshold) {
-    throw new UnsupportedOperationException("TODO");
+    return inventory.lowStockItems(threshold);
   }
 
   /**
@@ -171,7 +176,7 @@ public class AppController {
    * @param filePath where to write it
    */
   public void exportLowStock(int threshold, String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    fileHandler.save(inventory.lowStockItems(threshold), filePath);
   }
 
   /**
@@ -180,6 +185,6 @@ public class AppController {
    * @return a map from category to its accumulated revenue
    */
   public Map<Category, Double> getRevenueByCategory() {
-    throw new UnsupportedOperationException("TODO");
+    return inventory.getRevenueByCategory();
   }
 }

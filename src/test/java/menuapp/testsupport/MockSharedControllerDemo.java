@@ -5,6 +5,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import menuapp.view.AppPanel;
 import menuapp.view.FavoritesPanel;
 import menuapp.view.MenuPanel;
@@ -21,6 +22,7 @@ public class MockSharedControllerDemo {
 
     /**
      * Opens a two tab window (Menu Panel and Favorites) driven by one controller.
+     *
      * @param args unused
      */
     public static void main(String[] args) {
@@ -49,7 +51,6 @@ public class MockSharedControllerDemo {
                 demoFrame.setLocationRelativeTo(null);
                 demoFrame.setVisible(true);
             }
-        }
-        );
+        });
     }
 }

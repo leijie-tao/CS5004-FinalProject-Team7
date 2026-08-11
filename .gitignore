@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -49,6 +50,10 @@ out/
 # Cursor
 .cursor/
 .cursorignore
+
+# Local-only notes / long drafts (do not push)
+DesignDocuments/Controller_CrossModule_Changes.md
+DesignDocuments/DesignDraft_Structure_and_Interfaces.md
 
 # Local env / secrets
 .env
