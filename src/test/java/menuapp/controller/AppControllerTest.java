@@ -1,5 +1,6 @@
 package menuapp.controller;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -9,16 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import menuapp.model.Category;
+import menuapp.model.FavoritesList;
 import menuapp.model.Inventory;
 import menuapp.model.MenuItem;
 import menuapp.model.RestaurantMenu;
-import menuapp.persistence.FileHandler;
+import menuapp.persistence.JsonFileHandler;
 
 public class AppControllerTest {
 
     private AppController controller;
+
+    @TempDir
+    Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -32,7 +38,7 @@ public class AppControllerTest {
         inventory.setStock("Cake", 2);
         inventory.setStock("Cola", 20);
 
-        controller = new AppController(menu, inventory, new NoOpFileHandler());
+        controller = new AppController(menu, inventory, new JsonFileHandler());
     }
 
 // Tests for getters, searching, and filtering.
@@ -94,7 +100,7 @@ public class AppControllerTest {
     }
 
     /**
-     * getLowStockItems includes every item at or below the threshold, sorted by name. 
+     * getLowStockItems includes every item at or below the threshold, sorted by name.
      */
     @Test
     void getLowStockItemsReturnsNamesAtOrBelowThreshold() {
@@ -106,9 +112,9 @@ public class AppControllerTest {
     @Test
     void getRevenueByCategoryStartsAtZero() {
         Map<Category, Double> revenue = controller.getRevenueByCategory();
-        assertEquals(0.0, revenue.get(Category.MAIN), 0.01);
-        assertEquals(0.0, revenue.get(Category.DESSERT), 0.01);
-        assertEquals(0.0, revenue.get(Category.BEVERAGE), 0.01);
+        assertEquals(0.0, revenue.get(Category.MAIN), 0.0001);
+        assertEquals(0.0, revenue.get(Category.DESSERT), 0.0001);
+        assertEquals(0.0, revenue.get(Category.BEVERAGE), 0.0001);
     }
 
 
@@ -205,20 +211,33 @@ public class AppControllerTest {
         assertThrows(IllegalArgumentException.class, () -> controller.checkout());
     }
 
+// Tests for favorites save/load with JsonFileHandler and a temp directory.
 
+    /** saveFavorites then loadFavorites round-trips the favorites list through JSON. */
+    @Test
+    void saveThenLoadFavoritesRoundTripsThroughJsonFile() {
+        controller.addToFavorites(new MenuItem("Burger", 8.99, Category.MAIN, null));
+        controller.addToFavorites(new MenuItem("Cake", 5.50, Category.DESSERT, null));
+        String path = tempDir.resolve("favorites.json").toString();
 
-    /**
-     * Minimal FileHandler for tests that do not exercise save/load yet.
-     */
-    private static class NoOpFileHandler implements FileHandler {
+        controller.saveFavorites(path);
 
-    @Override
-    public <T> void save(T data, String filePath) {
+        // Change in-memory favorites so a successful load is visible.
+        controller.addToFavorites(new MenuItem("Cola", 2.00, Category.BEVERAGE, null));
+        assertEquals(3, controller.getFavorites().size());
+
+        controller.loadFavorites(path);
+
+        FavoritesList loaded = controller.getFavorites();
+        assertEquals(2, loaded.size());
+        assertEquals("Burger", loaded.getItems().get(0).getName());
+        assertEquals("Cake", loaded.getItems().get(1).getName());
     }
 
-    @Override
-    public <T> T load(String filePath, Class<T> type) {
-        return null;
-    }
+    /** loadFavorites throws when the file does not exist. */
+    @Test
+    void loadFavoritesThrowsWhenFileMissing() {
+        String missing = tempDir.resolve("missing-favorites.json").toString();
+        assertThrows(RuntimeException.class, () -> controller.loadFavorites(missing));
     }
 }

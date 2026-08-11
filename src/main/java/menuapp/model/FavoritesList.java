@@ -14,6 +14,13 @@ public class FavoritesList {
   private final List<MenuItem> items = new ArrayList<>();
 
   /**
+   * No-arg constructor required by Jackson when loading a favorites file.
+   */
+  public FavoritesList() {
+    this.name = "";
+  }
+
+  /**
    * Creates an empty favorites list with a label.
    *
    * @param name the label shown for this list, also the file base name
@@ -72,6 +79,18 @@ public class FavoritesList {
   /** @return the items in the list */
   public List<MenuItem> getItems() {
     return new ArrayList<>(items);
+  }
+
+  /**
+   * Replaces the items in this list. Used by Jackson when loading from JSON.
+   *
+   * @param items the items to store
+   */
+  public void setItems(List<MenuItem> items) {
+    this.items.clear();
+    if (items != null) {
+      this.items.addAll(items);
+    }
   }
 
   /** @return the number of items */

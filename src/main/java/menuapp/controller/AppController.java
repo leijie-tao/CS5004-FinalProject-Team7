@@ -130,7 +130,7 @@ public class AppController {
    * @param filePath where to write it
    */
   public void saveFavorites(String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    fileHandler.save(favorites, filePath);
   }
 
   /**
@@ -139,7 +139,7 @@ public class AppController {
    * @param filePath the file to read
    */
   public void loadFavorites(String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    favorites = fileHandler.load(filePath, FavoritesList.class);
   }
 
   /**
