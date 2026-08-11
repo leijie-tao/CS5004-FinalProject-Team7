@@ -42,9 +42,8 @@ Run tests:
 
 
 
-## Questions
 
-Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
+
 
 ### Order & Inventory (Model — Yixuan Liu)
 
