@@ -2,6 +2,7 @@ package menuapp.testsupport;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
 import menuapp.view.MenuPanel;
 
 /**
@@ -12,6 +13,7 @@ public class MockMenuPanelDemo {
 
     /**
      * Opens a window holding only the menu screen.
+     *
      * @param args unused
      */
     public static void main(String[] args) {

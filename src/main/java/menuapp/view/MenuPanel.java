@@ -8,17 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -55,8 +45,6 @@ public class MenuPanel extends AppPanel {
   private final JButton addToCartButton;
   /** Adds an item to faves */
   private final JButton addToFavoritesButton;
-  /** Tracks component layout is centered and starts false so that table is centered on run. */
-  private boolean showingEmptyState;
   /** Message panel if there are no items matching the filters */
   private final JLabel emptyStateLabel;
   /** This renders the exact list that the actual table renders with index-aligned with rows. However, rows carries only
@@ -64,6 +52,10 @@ public class MenuPanel extends AppPanel {
    * be modified in place and is not an owned state. Items are replaced in {@link #refresh()}.
    */
   private List<MenuItem> displayedItems;
+  /** Shows the selected item's picture, or a line of text when there is none. */
+  private final JLabel imagePreviewLabel;
+  /** Names the controller method that {@link #resolveItems} found unimplemented */
+  private String unavailableMethod;
 
 
   /**
@@ -71,7 +63,7 @@ public class MenuPanel extends AppPanel {
    * @param controller the shared controller
    */
   public MenuPanel(AppController controller) {
-    super(controller);
+    super(controller, "Menu");
 
     this.categoryCombo = new JComboBox<String>(buildCategoryLabels());
     this.searchField = new JTextField(16);
@@ -83,8 +75,9 @@ public class MenuPanel extends AppPanel {
     this.emptyStateLabel = new JLabel ("No match, please try another world.", SwingConstants.CENTER);
     this.statusLabel = new JLabel();
     this.addToCartButton = new JButton("+ Add to cart"); // TODO: research if this shows up fine for macs?
-    this.addToFavoritesButton = new JButton("+ Add to favorites"); // TODO: research if this shows up fine for macs?
+    this.addToFavoritesButton = new JButton("+ Add to favorites");
     this.displayedItems = new ArrayList<MenuItem>();
+    this.imagePreviewLabel = new JLabel("", SwingConstants.CENTER);
 
     // Dependency chain methods that read instance fields directly
     // Do not reorder!
@@ -103,7 +96,7 @@ public class MenuPanel extends AppPanel {
 
     JPanel controlStrip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
     controlStrip.add(titleLabel);
-    controlStrip.add(new JLabel("Category:"));
+    controlStrip.add(new JLabel("Category: "));
     controlStrip.add(categoryCombo);
     controlStrip.add(new JLabel("Search: "));
     controlStrip.add(searchField);
@@ -114,7 +107,13 @@ public class MenuPanel extends AppPanel {
     menuTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     menuTable.setRowHeight(24);
     menuTable.getTableHeader().setReorderingAllowed(false);
-    add(tableScrollPane, BorderLayout.CENTER);
+    setCenter(tableScrollPane);
+
+    // image added to the table
+    imagePreviewLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
+    imagePreviewLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+    imagePreviewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    add(imagePreviewLabel, BorderLayout.EAST);
 
     JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
     actionRow.add(addToCartButton);
@@ -123,66 +122,92 @@ public class MenuPanel extends AppPanel {
     add(actionRow, BorderLayout.SOUTH);
   }
 
+  // private helper for rendering images
+  /** Shows the selected item's picture, or explain if none. Runs the same on all panels, so preview doesn't change. */
+  private void updateImagePreview() {
+    MenuItem selectedItem = getSelectedItem();
+    ImageIcon preview = (selectedItem == null)
+            ? null
+            : ItemTableFormat.loadPreview(selectedItem.getImagePath());
+    imagePreviewLabel.setIcon(preview);
+    imagePreviewLabel.setText(previewTextFor(selectedItem, preview != null));
+  }
+
+  /**
+   * Builds the caption beside the preview. An item with a picture needs no
+   * caption, because the picture is the message.
+   *
+   * @param item the selected item, or null when nothing is selected
+   * @param hasImage true when an icon was loaded for that item
+   * @return the caption text, empty when the picture speaks for itself
+   */
+  static String previewTextFor(MenuItem item, boolean hasImage) {
+    if (item == null) {
+      return "Select an item to preview it";
+    }
+    if (!hasImage) {
+      return "No picture for " + item.getName();
+    }
+    return "";
+  }
+
   /** Wires control to a controller call then drawing of layout */
   private void attachListeners() {
-    menuTable.getSelectionModel().addListSelectionListener(
-            new ListSelectionListener() {
-              @Override
-              public void valueChanged(ListSelectionEvent event) {
-                updateButtonState();
-              }
-            }
-            );
+    menuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                                                             @Override
+                                                             public void valueChanged(ListSelectionEvent event) {
+                                                               updateButtonState();
+                                                             }
+                                                           }
+    );
 
     categoryCombo.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        refresh();
-      }
-    }
+                                      @Override
+                                      public void actionPerformed(ActionEvent event) {
+                                        refresh();
+                                      }
+                                    }
     );
 
     searchButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-
-        refresh();
-      }
-    }
+                                     @Override
+                                     public void actionPerformed(ActionEvent event) {
+                                       refresh();
+                                     }
+                                   }
     );
 
     // Pressing Enter inside the field fires the same path as the button.
     searchField.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        refresh();
-      }
-    }
+                                    @Override
+                                    public void actionPerformed(ActionEvent event) {
+                                      refresh();
+                                    }
+                                  }
     );
 
     showAllButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleShowAll();
-      }
-    }
+                                      @Override
+                                      public void actionPerformed(ActionEvent event) {
+                                        handleShowAll();
+                                      }
+                                    }
     );
 
     addToCartButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleAddToCart();
-      }
-    }
+                                        @Override
+                                        public void actionPerformed(ActionEvent event) {
+                                          handleAddToCart();
+                                        }
+                                      }
     );
 
-    addToFavoritesButton.addActionListener(
-            new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        handleAddToFavorites();
-      }
-    }
+    addToFavoritesButton.addActionListener(new ActionListener() {
+                                             @Override
+                                             public void actionPerformed(ActionEvent event) {
+                                               handleAddToFavorites();
+                                             }
+                                           }
     );
   }
 
@@ -197,24 +222,29 @@ public class MenuPanel extends AppPanel {
     String keyword = searchField.getText();
     Category category = categoryFromLabel(selectedCategoryLabel());
 
+    // guard block
     List<MenuItem> items = resolveItems(keyword, category);
+    if (items == null) {
+      showNotReady(unavailableMethod);
+      return;
+    }
     displayedItems = items;
 
     tableModel.setDataVector(ItemTableFormat.buildRows(items), COLUMN_NAMES);
     statusLabel.setText(buildStatusText(items.size(), keyword, category));
 
-    showEmptyState(items.isEmpty());
+    showEmptyState(items.isEmpty(), tableScrollPane, emptyStateLabel);
     updateButtonState();
   }
 
 
   // Browse by section and Default View that is laid out by section
+
   /**
    * Flattens the grouped menu into one list for the default sectioned view.
    * Iterates {@link Category#values()} rather than the map's own entries so the
-   * sections always appear in enum declaration order. Otherwise, a  {@code HashMap} would
-   * give an order that could change between runs. A category missing
-   * from the map simply contributes nothing.
+   * sections always appear in enum declaration order. Otherwise, a  {@code HashMap} would give an order
+   * that could change between runs. A category missing from the map simply contributes nothing.
    * @param grouped the menu grouped by category, may be null
    * @return a new list of every item, ordered by category then by the order each category's list holds;
    * empty when {@code grouped} is null
@@ -234,6 +264,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Filter by Category and Category Dropdown
+
   /**
    * Builds the entries for the category dropdown.
    * Labels come from {@link ItemTableFormat#formatCategory(Category)} so the
@@ -291,6 +322,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Add to Cart
+
   /**
    * Adds the selected item to the cart, then redraws. Does nothing when no row
    * is selected. On failure the dialog is shown and the method returns without
@@ -306,7 +338,7 @@ public class MenuPanel extends AppPanel {
     try {
       controller.addToCart(selectedItem);
     } catch (RuntimeException failure) {
-      showFailure("Could not add that item to the cart", failure);
+      showFailure("Sorry, could not add that item to the cart", failure);
       return;
     }
     refresh();
@@ -314,9 +346,8 @@ public class MenuPanel extends AppPanel {
   }
 
   /**
-   * Narrows a list of items down to one category.
-   * {@code controller.search} looks across the whole menu and ignores the
-   * category.
+   * Narrows a list of items down to one category with {@code controller.search} looking across the whole
+   * menu and ignores the category.
    * @param items the items to narrow and can be null
    * @param category the category to keep or to keep everything set to null
    * @return new list with matching items
@@ -339,6 +370,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Adding to Favorites
+
   /** Adds the selected item to favorites, then redraws. */
   private void handleAddToFavorites() {
     MenuItem selectedItem = getSelectedItem();
@@ -348,7 +380,7 @@ public class MenuPanel extends AppPanel {
     try {
       controller.addToFavorites(selectedItem);
     } catch (RuntimeException failure) {
-      showFailure("Could not add that item to favorites", failure);
+      showFailure("Sorry, could not add that item to favorites", failure);
       return;
     }
     refresh();
@@ -356,6 +388,7 @@ public class MenuPanel extends AppPanel {
   }
 
   // Handler methods reachable only from inside a listener, and not called by anything else in the panel.
+
   /**
    * Clears both filters and redraws the full sectioned menu. Resetting the
    * dropdown starts its own listener, so {@link #refresh()} runs once from that
@@ -368,29 +401,12 @@ public class MenuPanel extends AppPanel {
     refresh();
   }
 
-  /**
-   * Swaps the table for a prompt when filters find no match.
-   * Early return is required since without it a repeat call would add the same component to the center slot twice.
-   * Because the state is known to be flipping, the component being removed is always the one
-   * currently in that slot.
-   * @param isEmpty true when no items are showing
-   */
-  private void showEmptyState(boolean isEmpty) {
-    if (isEmpty == showingEmptyState) {
-      return;
-    }
-    remove(isEmpty ? tableScrollPane : emptyStateLabel);
-    add(isEmpty ? emptyStateLabel : tableScrollPane, BorderLayout.CENTER);
-    showingEmptyState = isEmpty;
-    revalidate();
-    repaint();
-  }
-
   /** Enables the two action buttons only while a row is selected. */
   private void updateButtonState() {
     boolean hasSelection = menuTable.getSelectedRow() >= 0;
     addToCartButton.setEnabled(hasSelection);
     addToFavoritesButton.setEnabled(hasSelection);
+    updateImagePreview();
   }
 
   /**
@@ -442,26 +458,38 @@ public class MenuPanel extends AppPanel {
    * @return the items to display, never null
    */
   private List<MenuItem> resolveItems(String keyword, Category category) {
+    unavailableMethod = null;
     List<MenuItem> items;
-    if (isSearching(keyword)) {
-      items = narrowToCategory(controller.search(keyword.trim()), category);
-    } else if (category != null) {
-      items = controller.filterByCategory(category);
-    } else {
-      items = flattenGrouped(controller.getGroupedMenu());
+    try {
+      if (isSearching(keyword)) {
+        items = narrowToCategory(controller.search(keyword.trim()), category);
+      } else if (category != null) {
+        items = controller.filterByCategory(category);
+      } else {
+        items = flattenGrouped(controller.getGroupedMenu());
+      }
+    } catch (UnsupportedOperationException notBuiltYet) {
+      unavailableMethod = methodNameFor(keyword, category);
+      return null;
     }
     return (items == null) ? new ArrayList<MenuItem>() : items;
   }
 
   /**
-   * Reports a failed controller call to the user. The controller wraps every
-   * persistence failure in a {@code RuntimeException} and stating the cause.
-   * @param summary a brief description of what failed
-   * @param failure the exception that caused it
+   * * Returns the name of the controller method used for the current filters. A search keyword uses search,
+   * a selected category uses filterByCategory, and no filters uses getGroupedMenu.
+   * @param keyword the current search keyword, which may be null or blank
+   * @param category the selected category, or null if none is selected
+   * @return the name of the controller method to use
    */
-  private void showFailure(String summary, RuntimeException failure) {
-  JOptionPane.showMessageDialog(
-          this, summary + ".\n" + failure.getMessage(),
-          "Menu", JOptionPane.ERROR_MESSAGE);
+  static String methodNameFor(String keyword, Category category) {
+    if (isSearching(keyword)) {
+      return "search";
+    }
+    if (category != null) {
+      return "filterByCategory";
+    }
+    return "getGroupedMenu";
   }
+
 }

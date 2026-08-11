@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import menuapp.model.Role;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,9 @@ import org.junit.jupiter.api.Test;
  */
 public class MainFrameTest {
 
-    /** Not a test--purpose is to collect card keu for every role */
+    /**
+     * Not a test--purpose is to collect card keu for every role
+     */
     private Set<String> roleCardNames() {
         Set<String> names = new HashSet<String>();
         for (Role role : Role.values()) {
@@ -24,7 +27,9 @@ public class MainFrameTest {
         return names;
     }
 
-    /** Each role produces a card name and if the card name is blank then showCard will register it to not be available again. */
+    /**
+     * Each role produces a card name and if the card name is blank then showCard will register it to not be available again.
+     */
     @Test
     public void individualRoleProducedCardKey() {
         for (Role role : Role.values()) {

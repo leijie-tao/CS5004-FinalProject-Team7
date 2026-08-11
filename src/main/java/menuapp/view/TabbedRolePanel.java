@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import menuapp.controller.AppController;
 
 /**
@@ -13,11 +14,14 @@ import menuapp.controller.AppController;
  */
 class TabbedRolePanel extends AppPanel {
 
-    /** The tab strip set to private, so no caller can bypass the refresh on switch. */
+    /**
+     * The tab strip set to private, so no caller can bypass the refresh on switch.
+     */
     private final JTabbedPane screenTabs;
 
     /**
      * Builds an empty tabbed screen. Add the individual screens with
+     *
      * @param controller the shared controller
      */
     TabbedRolePanel(AppController controller) {
@@ -32,14 +36,14 @@ class TabbedRolePanel extends AppPanel {
             public void stateChanged(ChangeEvent event) {
                 refreshSelectedScreen();
             }
-        }
-        );
+        });
     }
 
     /**
      * Adds one screen under a tab. Adding the first screen selects it.
+     *
      * @param tabTitle the text on the tab
-     * @param screen the screen to show under it
+     * @param screen   the screen to show under it
      */
     void addScreen(String tabTitle, AppPanel screen) {
         screenTabs.addTab(tabTitle, screen);
@@ -66,7 +70,9 @@ class TabbedRolePanel extends AppPanel {
         }
     }
 
-    /** @return how many screens are behind the tabs */
+    /**
+     * @return how many screens are behind the tabs
+     */
     int screenCount() {
         return screenTabs.getTabCount();
     }
@@ -74,6 +80,7 @@ class TabbedRolePanel extends AppPanel {
     /**
      * Selects a screen by position like clicking a tab.
      * This is used by the tests to prove the switch triggers a refresh.
+     *
      * @param index the position of the tab to select
      */
     void selectScreen(int index) {
