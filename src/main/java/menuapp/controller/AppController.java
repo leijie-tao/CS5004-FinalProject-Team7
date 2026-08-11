@@ -60,7 +60,7 @@ public class AppController {
    * @param item the item to add
    */
   public void addToCart(MenuItem item) {
-    throw new UnsupportedOperationException("TODO");
+    cart.add(item);
   }
 
   /**
@@ -69,7 +69,7 @@ public class AppController {
    * @param name the name of the item to remove
    */
   public void removeFromCart(String name) {
-    throw new UnsupportedOperationException("TODO");
+    cart.remove(name);
   }
 
   /**
@@ -79,7 +79,7 @@ public class AppController {
    * @param quantity the new quantity
    */
   public void setCartQuantity(String name, int quantity) {
-    throw new UnsupportedOperationException("TODO");
+    cart.setQuantity(name, quantity);
   }
 
   /** @return the current cart */
@@ -101,7 +101,7 @@ public class AppController {
    * @param item the item to add
    */
   public void addToFavorites(MenuItem item) {
-    throw new UnsupportedOperationException("TODO");
+    favorites.add(item);
   }
 
   /**
@@ -145,7 +145,7 @@ public class AppController {
    * @param amount how many units to add
    */
   public void restock(String itemName, int amount) {
-    throw new UnsupportedOperationException("TODO");
+    inventory.increase(itemName, amount);
   }
 
   /** @return the inventory, for the staff view */
