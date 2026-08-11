@@ -51,8 +51,9 @@ out/
 .cursor/
 .cursorignore
 
-# Local-only notes for teammate sync (do not push)
+# Local-only notes / long drafts (do not push)
 DesignDocuments/Controller_CrossModule_Changes.md
+DesignDocuments/DesignDraft_Structure_and_Interfaces.md
 
 # Local env / secrets
 .env

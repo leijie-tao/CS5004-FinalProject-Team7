@@ -1,12 +1,48 @@
-# Final Project for CS 5004 - (APPLICATION NAME/Update)
+# Final Project for CS 5004 - NU Cafe Program
 
-(remove this and add your sections/elements)
-This readme should contain the following information:
+This is a Java Swing desktop app for NU Cafe. Customers can browse, search, and filter the menu, manage a cart, and save their favorites. Staff can track inventory, restock, export low-stock lists, and view graphic revenue by category. Data is stored in local JSON files.
 
-* The group member's names and github accounts
-* The application name and a brief description of the application
-* Links to design documents and manuals
-* Instructions on how to run the application
+**Repository:** [https://github.com/leijie-tao/CS5004-FinalProject-Team7](https://github.com/leijie-tao/CS5004-FinalProject-Team7)
+
+## Team 7
+
+
+| Name       | GitHub                                              | Role                     |
+| ---------- | --------------------------------------------------- | ------------------------ |
+| Si Tu      | [tusi320](https://github.com/tusi320)               | Model                    |
+| Yixuan Liu | [YIXUAN-LIU-lab](https://github.com/YIXUAN-LIU-lab) | Model                    |
+| Jessie     | [jessielinengr](https://github.com/jessielinengr)   | Persistence              |
+| Boco       | [LuBocNU](https://github.com/LuBocNU)               | View                     |
+| Leijie Tao | [leijie-tao](https://github.com/leijie-tao)         | Controller & Integration |
+
+
+
+
+## Documentation
+
+- [All Features](DesignDocuments/features.md)
+- [UML](DesignDocuments/UML.md)
+- [Manual](Manual/Manual.md)
+
+
+
+## Run
+
+Requires JDK 17+.
+
+```bash
+./gradlew run
+```
+
+Run tests:
+
+```bash
+./gradlew test
+```
+
+
+
+## Questions
 
 Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
 
@@ -28,10 +64,10 @@ Both classes are covered by JUnit 5 unit tests (38 tests), including edge cases:
 non-positive quantities, over-selling, stock reaching exactly zero, unknown
 items, empty orders, threshold boundaries, and defensive copies.
 
-
-
 ### GUI Components (View - L Boco)
+
 The GUI is built from one window and a set of screens. Every screen is an `AppPanel`. `MainFrame` is the only class that is not a screen but a window.
+
 ```mermaid
 flowchart TB
     subgraph frame["MainFrame (JFrame)<br/>CardLayout"]
@@ -62,11 +98,15 @@ flowchart TB
     style cust fill:#dbeafe,stroke:#2563eb
     style staff fill:#dbeafe,stroke:#2563eb
 ```
+
+
+
 The GUI (or View) is compromised of three parts, each with their own specific classes. The overarching component of
 the GUI is the MainFrame(JFrame) where only one card is visible at a time. There is technical 4th part, AppPanel, since
 it doesn't belong in any of the three as it acts more as a screen contract.
 
 ### View: AppPanel
+
 `AppPanel` is an abstract that extends `Jpanel`. Every screen in the application is an `AppPanel`, including the
 tabbed container. It holds the `AppController` reference each screen needs and declares the abstract `refresh()`.
 It also supplies the shared `showEmptyState` and `showFailure` helpers so no subclass reimplements
@@ -77,6 +117,7 @@ three groups below because both *Windows & Navigation* and *Content Screens* are
 switches screens through an `AppPanel` reference so the correct `refresh()` runs by dynamic dispatch.
 
 #### *View: Windows & Navigation*
+
 This component includes the panels that essentially are what the user sees regardless of the
 chosen role.
 
@@ -103,6 +144,7 @@ implement it, and `MainFrame` has already spent its single inheritance slot on `
 would make the listener impossible to consume. It carries one method, `roleSelected(Role)`, which keeps `RoleSelectionPanel` ignorant of cards and keeps `MainFrame` in charge of navigation.
 
 #### *View: Content Screens*
+
 Consist mostly of classes that builds the widgets to create various pieces of the GUI.
 
 `MenuPanel` - Extends `AppPanel` and is the customer's browse screen for the category filter, the keyword search,
@@ -148,6 +190,7 @@ This screen was built last on purpose. Revenue only accumulates at checkout, so 
 draw until `OrderPanel` works, and an empty state is shown until the first sale is recorded.
 
 #### *View: Shared Structure*
+
 The "Shared Structure" could have been part of the contents, but I decided to create it their own since this third
 part works as the model to display text converter.
 
@@ -170,6 +213,7 @@ type a new price straight into a table cell and the display would disagree with 
 in between. Making it impossible in the model is stronger than remembering not to do it.
 
 #### *Tests for View*
+
 The test classes fall into three groups. `MockController` and `MockFavoritesList` are the isolation
 layer, a fake controller seeded with real `MenuItem` objects so that every screen can be built and
 exercised without the Model or the real controller being finished, which is what let the View be
@@ -190,4 +234,3 @@ being available.
 `RoleSelectionPanelTest`
 `SalesChartPanelTest`
 `TabbedRolePanelTest`
-
