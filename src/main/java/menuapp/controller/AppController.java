@@ -92,7 +92,11 @@ public class AppController {
    * sale, then clears the cart.
    */
   public void checkout() {
-    throw new UnsupportedOperationException("TODO");
+    for (Map.Entry<MenuItem, Integer> entry : cart.getItemsWithQuantities().entrySet()) {
+      inventory.decrease(entry.getKey().getName(), entry.getValue());
+    }
+    inventory.recordSale(cart);
+    cart.clear();
   }
 
   /**

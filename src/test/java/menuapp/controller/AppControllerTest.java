@@ -5,6 +5,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -163,8 +164,46 @@ public class AppControllerTest {
         controller.restock("Burger", 5);
         assertEquals(15, controller.getInventory().getStock("Burger"));
     }
-    
-// Tests for checkout.
+
+// Tests for checkout, including items out of stock.
+
+    /**
+     * checkout decreases stock by cart quantities, records revenue, and clears
+     * the cart.
+     */
+    @Test
+    void checkoutDecreasesStockRecordsRevenueAndClearsCart() {
+        MenuItem burger = new MenuItem("Burger", 8.99, Category.MAIN, null);
+        MenuItem cake = new MenuItem("Cake", 5.50, Category.DESSERT, null);
+        MenuItem cola = new MenuItem("Cola", 2.00, Category.BEVERAGE, null);
+
+        controller.addToCart(burger);
+        controller.addToCart(burger);
+        controller.addToCart(cake);
+        controller.addToCart(cola);
+        controller.checkout();
+
+        assertEquals(0, controller.getCart().size());
+        assertEquals(8, controller.getInventory().getStock("Burger"));
+        assertEquals(1, controller.getInventory().getStock("Cake"));
+        assertEquals(19, controller.getInventory().getStock("Cola"));
+        assertEquals(1, controller.getInventory().getOrderCount());
+        assertEquals(8.99 * 2, controller.getRevenueByCategory().get(Category.MAIN), 0.01);
+        assertEquals(5.50, controller.getRevenueByCategory().get(Category.DESSERT), 0.01);
+        assertEquals(2.00, controller.getRevenueByCategory().get(Category.BEVERAGE), 0.01);
+    }
+
+    /** checkout throws when item is out of stock. */
+    @Test
+    void checkoutThrowsWhenCartExceedsStock() {
+        MenuItem cake = new MenuItem("Cake", 5.50, Category.DESSERT, null);
+        // Cake stock is 2 in setUp, so adding 3 cakes should fail.
+        controller.addToCart(cake);
+        controller.addToCart(cake);
+        controller.addToCart(cake);
+
+        assertThrows(IllegalArgumentException.class, () -> controller.checkout());
+    }
 
 
 
