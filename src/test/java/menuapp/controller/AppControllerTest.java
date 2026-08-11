@@ -240,4 +240,17 @@ public class AppControllerTest {
         String missing = tempDir.resolve("missing-favorites.json").toString();
         assertThrows(RuntimeException.class, () -> controller.loadFavorites(missing));
     }
+
+// Tests for exportLowStock with JsonFileHandler and a temp directory.
+
+    /** exportLowStock writes the low-stock item names to a JSON file. */
+    @Test
+    void exportLowStockWritesNamesAtOrBelowThreshold() {
+        String path = tempDir.resolve("lowstock.json").toString();
+        // With threshold 10, Burger (10) and Cake (2) qualify; Cola (20) does not.
+        controller.exportLowStock(10, path);
+
+        List<?> loaded = new JsonFileHandler().load(path, List.class);
+        assertEquals(List.of("Burger", "Cake"), loaded);
+    }
 }

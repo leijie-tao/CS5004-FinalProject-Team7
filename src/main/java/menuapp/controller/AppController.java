@@ -176,7 +176,7 @@ public class AppController {
    * @param filePath where to write it
    */
   public void exportLowStock(int threshold, String filePath) {
-    throw new UnsupportedOperationException("TODO");
+    fileHandler.save(inventory.lowStockItems(threshold), filePath);
   }
 
   /**
